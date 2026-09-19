@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Local Stories | GLAMOUR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'] } } } } </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; } h1, h2, h3, h4, .serif { font-family: 'Playfair Display', serif; } .hover-underline:hover { text-decoration: underline; text-underline-offset: 4px; } </style>
+</head>
+<body class="bg-white text-gray-900 dark:bg-[#121212] dark:text-gray-100 transition-colors duration-300">
+    <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-pink-600 z-[60] w-0 transition-all duration-100"></div>
+    <div class="bg-black text-white text-center py-2 text-xs font-medium tracking-widest uppercase dark:bg-gray-900">Buy Our New Book — On Sale Now! <a href="#" class="underline ml-1 hover:text-pink-400">Buy Now</a></div>
+    <header class="border-b border-gray-200 sticky top-0 bg-white/95 backdrop-blur-sm z-50 dark:bg-[#121212]/95 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-center mb-4">
+                <button id="mobile-menu-btn" class="md:hidden text-gray-900 dark:text-white focus:outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+                <div class="flex-shrink-0 flex items-center justify-center flex-1 md:flex-none"><a href="index.html" class="flex flex-col sm:flex-row sm:items-baseline items-center gap-0 sm:gap-1.5"><span class="serif text-4xl md:text-5xl font-bold tracking-tighter text-black dark:text-white leading-none">GLAMOUR<span class="font-black">+</span></span><span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-pink-600 dark:text-pink-400 whitespace-nowrap leading-none">West Africa</span></a></div>
+                <div class="flex items-center space-x-4">
+                    <button id="search-btn" class="text-gray-900 dark:text-white hover:text-pink-600 dark:hover:text-pink-400 focus:outline-none"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                    <button id="dark-mode-btn" class="text-gray-900 dark:text-white hover:text-pink-600 dark:hover:text-pink-400 focus:outline-none"><svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg><svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></button>
+                    <div id="auth-nav-slot" class="flex items-center">
+                        <a id="auth-login-link" href="login.html" class="text-xs font-bold uppercase tracking-wider hover:text-pink-600 dark:hover:text-pink-400 transition">Log In</a>
+                        <div id="auth-loggedin-slot" class="hidden items-center gap-2">
+                            <a id="manage-magazine-link" href="admin.html" class="hidden text-xs font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 hover:underline">Manage Magazine</a>
+                            <span id="auth-user-email" class="hidden sm:inline text-xs text-gray-500 dark:text-gray-400 max-w-[120px] truncate"></span>
+                            <button id="auth-logout-btn" class="text-xs font-bold uppercase tracking-wider hover:text-pink-600 dark:hover:text-pink-400 transition">Log Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="hidden lg:flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-wider">
+                <a href="fashion.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Fashion</a>
+                <a href="politics.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Politics</a>
+                <a href="business.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Business</a>
+                <a href="tourism.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Tourism</a>
+                <a href="celebrities.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Celebrities</a>
+                <a href="entertainment.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Entertainment</a>
+                <a href="red-carpet.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Red Carpet</a>
+                <a href="local-stories.html" class="hover-underline text-pink-600 dark:text-pink-400">Local Stories</a>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-black/50 z-50 hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute right-0 top-0 h-full w-80 bg-white dark:bg-[#1e1e1e] shadow-2xl transform translate-x-full transition-transform duration-300 overflow-y-auto" id="mobile-menu-panel">
+            <div class="p-6">
+                <button id="close-mobile-menu" class="absolute top-4 right-4 text-gray-500 hover:text-black dark:hover:text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                <nav class="flex flex-col space-y-5 mt-8 text-lg font-serif font-semibold dark:text-white">
+                    <a href="fashion.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Fashion</a>
+                    <a href="politics.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Politics</a>
+                    <a href="business.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Business</a>
+                    <a href="tourism.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Tourism</a>
+                    <a href="celebrities.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Celebrities</a>
+                    <a href="entertainment.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Entertainment</a>
+                    <a href="red-carpet.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Red Carpet</a>
+                    <a href="local-stories.html" class="border-b border-gray-200 dark:border-gray-700 pb-3 text-pink-600 dark:text-pink-400">Local Stories</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div id="search-overlay" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <button id="close-search" class="absolute top-6 right-6 text-white hover:text-pink-400"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <div class="w-full max-w-3xl"><h3 class="serif text-3xl text-white mb-6 text-center">Search Glamour</h3><input id="search-input" type="text" placeholder="Search for articles..." class="w-full bg-transparent border-b-2 border-white text-white text-2xl py-4 focus:outline-none focus:border-pink-500 placeholder-gray-400"></div>
+    </div>
+    
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="text-center mb-12">
+            <h1 class="serif text-5xl md:text-6xl font-bold text-black dark:text-white mb-4">Local Stories</h1>
+            <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto">Community news, local heroes, and events happening right in your backyard.</p>
+        </div>
+        <section id="story-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12" data-category="local-stories"></section>
+        <div class="text-center mt-12"><button id="load-more-btn" class="bg-black dark:bg-white text-white dark:text-black px-8 py-3 text-sm font-bold uppercase tracking-widest hover:bg-gray-800 dark:hover:bg-gray-200 transition rounded-sm">Load More Stories</button></div>
+    </main>
+    <footer class="bg-black text-white py-12 dark:bg-[#0a0a0a]"><div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center"><h4 class="serif text-2xl font-bold mb-6">GLAMOUR</h4><p class="text-xs text-gray-500">&copy; 2026 Glamour+ West Africa. All rights reserved.</p></div></footer>
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-black dark:bg-white text-white dark:text-black p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:scale-110 z-50 focus:outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/stories.js"></script>
+
+    <script>
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn'); const closeMobileMenuBtn = document.getElementById('close-mobile-menu'); const mobileMenu = document.getElementById('mobile-menu'); const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+        function openMobileMenu() { mobileMenu.classList.remove('hidden'); setTimeout(() => { mobileMenu.classList.remove('opacity-0'); mobileMenuPanel.classList.remove('translate-x-full'); }, 10); }
+        function closeMobileMenu() { mobileMenu.classList.add('opacity-0'); mobileMenuPanel.classList.add('translate-x-full'); setTimeout(() => { mobileMenu.classList.add('hidden'); }, 300); }
+        mobileMenuBtn.addEventListener('click', openMobileMenu); closeMobileMenuBtn.addEventListener('click', closeMobileMenu); mobileMenu.addEventListener('click', (e) => { if (e.target === mobileMenu) closeMobileMenu(); });
+        const searchBtn = document.getElementById('search-btn'); const closeSearchBtn = document.getElementById('close-search'); const searchOverlay = document.getElementById('search-overlay');
+        function openSearch() { searchOverlay.classList.remove('hidden'); setTimeout(() => { searchOverlay.classList.remove('opacity-0'); }, 10); }
+        function closeSearch() { searchOverlay.classList.add('opacity-0'); setTimeout(() => { searchOverlay.classList.add('hidden'); }, 300); }
+        searchBtn.addEventListener('click', openSearch); closeSearchBtn.addEventListener('click', closeSearch);
+        const darkModeBtn = document.getElementById('dark-mode-btn'); const sunIcon = document.getElementById('sun-icon'); const moonIcon = document.getElementById('moon-icon'); const htmlElement = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { htmlElement.classList.add('dark'); sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden'); } else { htmlElement.classList.remove('dark'); sunIcon.classList.add('hidden'); moonIcon.classList.remove('hidden'); }
+        darkModeBtn.addEventListener('click', () => { htmlElement.classList.toggle('dark'); if (htmlElement.classList.contains('dark')) { localStorage.setItem('theme', 'dark'); sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden'); } else { localStorage.setItem('theme', 'light'); sunIcon.classList.add('hidden'); moonIcon.classList.remove('hidden'); } });
+        const progressBar = document.getElementById('progress-bar'); if (progressBar) { window.addEventListener('scroll', () => { const scrollTop = window.scrollY; const docHeight = document.body.offsetHeight; const winHeight = window.innerHeight; const scrollPercent = scrollTop / (docHeight - winHeight); progressBar.style.width = (scrollPercent * 100) + '%'; }); }
+        const backToTopBtn = document.getElementById('back-to-top'); if (backToTopBtn) { window.addEventListener('scroll', () => { if (window.scrollY > 300) { backToTopBtn.classList.remove('opacity-0', 'invisible'); backToTopBtn.classList.add('opacity-100', 'visible'); } else { backToTopBtn.classList.add('opacity-0', 'invisible'); backToTopBtn.classList.remove('opacity-100', 'visible'); } }); backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); }); }
+        const loadMoreBtn = document.getElementById('load-more-btn'); if (loadMoreBtn) { loadMoreBtn.addEventListener('click', () => { const hiddenArticles = document.querySelectorAll('.hidden-article'); hiddenArticles.forEach(article => article.classList.remove('hidden')); loadMoreBtn.classList.add('hidden'); }); }
+    </script>
+</body>
+</html>

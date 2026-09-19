@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About | GLAMOUR+ West Africa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'] } } } } </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <style> body { font-family: 'Inter', sans-serif; background-image: url('assets/cover.jpg'); background-size: contain; background-position: top center; background-repeat: no-repeat; background-attachment: fixed; background-color: rgba(255,255,255,0.93); background-blend-mode: lighten; } html.dark body { background-color: rgba(18,18,18,0.93); background-blend-mode: darken; } h1, h2, h3, h4, .serif { font-family: 'Playfair Display', serif; } .hover-underline:hover { text-decoration: underline; text-underline-offset: 4px; } @media (max-width: 767px) { body { background-attachment: scroll; } } </style>
+</head>
+<body class="bg-white text-gray-900 dark:bg-[#121212] dark:text-gray-100 transition-colors duration-300">
+    <div id="progress-bar" class="fixed top-0 left-0 h-1 bg-pink-600 z-[60] w-0 transition-all duration-100"></div>
+    <div class="bg-black text-white text-center py-2 text-xs font-medium tracking-widest uppercase dark:bg-gray-900">Our Books Are Here! <a href="books.html" class="underline ml-1 hover:text-pink-400">Buy Now</a></div>
+    <header class="border-b border-gray-200 sticky top-0 bg-white/95 backdrop-blur-sm z-50 dark:bg-[#121212]/95 dark:border-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+            <div class="flex justify-between items-center mb-4">
+                <button id="mobile-menu-btn" class="md:hidden -m-2 p-2 text-gray-900 dark:text-white focus:outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg></button>
+                <div class="flex-shrink-0 flex items-center justify-center flex-1 md:flex-none"><a href="index.html" class="flex flex-col sm:flex-row sm:items-baseline items-center gap-0 sm:gap-1.5"><span class="serif text-4xl md:text-5xl font-bold tracking-tighter text-black dark:text-white leading-none">GLAMOUR<span class="font-black">+</span></span><span class="text-[10px] md:text-xs font-bold uppercase tracking-widest text-pink-600 dark:text-pink-400 whitespace-nowrap leading-none">West Africa</span></a></div>
+                <div class="flex items-center space-x-4">
+                    <button id="search-btn" class="-m-2 p-2 text-gray-900 dark:text-white hover:text-pink-600 dark:hover:text-pink-400 focus:outline-none"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
+                    <button id="dark-mode-btn" class="-m-2 p-2 text-gray-900 dark:text-white hover:text-pink-600 dark:hover:text-pink-400 focus:outline-none"><svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg><svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></button>
+                    <div id="auth-nav-slot" class="flex items-center">
+                        <a id="auth-login-link" href="login.html" class="text-xs font-bold uppercase tracking-wider hover:text-pink-600 dark:hover:text-pink-400 transition">Log In</a>
+                        <div id="auth-loggedin-slot" class="hidden items-center gap-2">
+                            <a id="manage-magazine-link" href="admin.html" class="hidden text-xs font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 hover:underline">Manage Magazine</a>
+                            <span id="auth-user-email" class="hidden sm:inline text-xs text-gray-500 dark:text-gray-400 max-w-[120px] truncate"></span>
+                            <button id="auth-logout-btn" class="text-xs font-bold uppercase tracking-wider hover:text-pink-600 dark:hover:text-pink-400 transition">Log Out</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="hidden lg:flex flex-wrap justify-center gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-wider">
+                <a href="fashion.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Fashion</a>
+                <a href="politics.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Politics</a>
+                <a href="business.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Business</a>
+                <a href="tourism.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Tourism</a>
+                <a href="celebrities.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Celebrities</a>
+                <a href="entertainment.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Entertainment</a>
+                <a href="red-carpet.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Red Carpet</a>
+                <a href="local-stories.html" class="hover-underline hover:text-pink-600 dark:hover:text-pink-400 transition">Local Stories</a>
+            </nav>
+        </div>
+    </header>
+
+    <div id="mobile-menu" class="fixed inset-0 bg-black/50 z-50 hidden opacity-0 transition-opacity duration-300">
+        <div class="absolute right-0 top-0 h-full w-80 bg-white dark:bg-[#1e1e1e] shadow-2xl transform translate-x-full transition-transform duration-300 overflow-y-auto" id="mobile-menu-panel">
+            <div class="p-6">
+                <button id="close-mobile-menu" class="absolute top-4 right-4 text-gray-500 hover:text-black dark:hover:text-white"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+                <nav class="flex flex-col space-y-5 mt-8 text-lg font-serif font-semibold dark:text-white">
+                    <a href="fashion.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Fashion</a>
+                    <a href="politics.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Politics</a>
+                    <a href="business.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Business</a>
+                    <a href="tourism.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Tourism</a>
+                    <a href="celebrities.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Celebrities</a>
+                    <a href="entertainment.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Entertainment</a>
+                    <a href="red-carpet.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Red Carpet</a>
+                    <a href="local-stories.html" class="border-b border-gray-200 dark:border-gray-700 pb-3">Local Stories</a>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <div id="search-overlay" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4 opacity-0 transition-opacity duration-300">
+        <button id="close-search" class="absolute top-6 right-6 text-white hover:text-pink-400"><svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg></button>
+        <div class="w-full max-w-3xl"><h3 class="serif text-3xl text-white mb-6 text-center">Search Glamour</h3><input id="search-input" type="text" placeholder="Search for articles..." class="w-full bg-transparent border-b-2 border-white text-white text-2xl py-4 focus:outline-none focus:border-pink-500 placeholder-gray-400"></div>
+    </div>
+
+    <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <nav class="text-sm text-gray-500 dark:text-gray-400 mb-10">
+            <a href="index.html" class="hover:text-pink-600 dark:hover:text-pink-400">Home</a> / <span class="text-gray-900 dark:text-white">About</span>
+        </nav>
+
+        <div class="text-center mb-16">
+            <span class="text-xs font-bold text-pink-600 dark:text-pink-400 uppercase tracking-widest">Our Story</span>
+            <h1 id="about-title" class="serif text-5xl md:text-6xl font-bold mt-3 mb-6 text-black dark:text-white">About Glamour+ West Africa</h1>
+            <p id="about-subtitle" class="text-xl text-gray-600 dark:text-gray-400 italic">Fashion &middot; Style &middot; Culture &middot; Power &middot; Influence</p>
+        </div>
+
+        <div id="about-intro" class="prose prose-lg max-w-none text-gray-700 dark:text-gray-300 space-y-6 mb-16 text-lg leading-relaxed">
+            <p>Glamour+ West Africa exists to celebrate the icons, innovators, and changemakers shaping the region — on the runway, in the boardroom, in government, and on the world stage. We tell the stories of the people redefining what African excellence looks like, one cover at a time.</p>
+            <p>From CEO lifestyle and high fashion to politics, tourism, and the culture moving the continent forward, our team covers the moments and the people worth paying attention to — with the same energy, polish, and pride that define the region itself.</p>
+            <p>We believe African stories deserve to be told by African storytellers, with the same production values and reach as any global publication. That's the standard we hold ourselves to with every issue, every cover, and every story.</p>
+        </div>
+
+        <section class="mb-16">
+            <h2 class="serif text-3xl font-bold mb-8 text-center text-black dark:text-white">What We Cover</h2>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                <a href="fashion.html" class="p-4 border border-gray-200 dark:border-gray-800 rounded-sm hover:border-pink-600 dark:hover:border-pink-400 transition text-sm font-semibold">Fashion</a>
+                <a href="politics.html" class="p-4 border border-gray-200 dark:border-gray-800 rounded-sm hover:border-pink-600 dark:hover:border-pink-400 transition text-sm font-semibold">Politics</a>
+                <a href="business.html" class="p-4 border border-gray-200 dark:border-gray-800 rounded-sm hover:border-pink-600 dark:hover:border-pink-400 transition text-sm font-semibold">Business</a>
+                <a href="tourism.html" class="p-4 border border-gray-200 dark:border-gray-800 rounded-sm hover:border-pink-600 dark:hover:border-pink-400 transition text-sm font-semibold">Tourism</a>
+                <a href="celebrities.html" class="p-4 border border-gray-200 dark:border-gray-800 rounded-sm hover:border-pink-600 dark:hover:border-pink-400 transition text-sm font-semibold">Celebrities</a>
+                <a href="entertainment.html" class="p-4 border border-gray-200 dark:border-gray-800 rounded-sm hover:border-pink-600 dark:hover:border-pink-400 transition text-sm font-semibold">Entertainment</a>
+                <a href="red-carpet.html" class="p-4 border border-gray-200 dark:border-gray-800 rounded-sm hover:border-pink-600 dark:hover:border-pink-400 transition text-sm font-semibold">Red Carpet</a>
+                <a href="local-stories.html" class="p-4 border border-gray-200 dark:border-gray-800 rounded-sm hover:border-pink-600 dark:hover:border-pink-400 transition text-sm font-semibold">Local Stories</a>
+            </div>
+        </section>
+
+        <section id="team-section" class="mb-16">
+            <h2 class="serif text-3xl font-bold mb-10 text-center text-black dark:text-white">Meet the Team</h2>
+            <div id="team-grid" class="grid grid-cols-2 md:grid-cols-4 gap-8"></div>
+        </section>
+
+        <section id="partners-section" class="mb-16">
+            <h2 class="serif text-3xl font-bold mb-10 text-center text-black dark:text-white">Our Partners</h2>
+            <div id="partners-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-8"></div>
+        </section>
+
+        <section class="text-center bg-gray-50 dark:bg-[#1e1e1e] rounded-sm p-10">
+            <h2 id="about-contact-heading" class="serif text-2xl font-bold mb-3 text-black dark:text-white">Get In Touch</h2>
+            <p id="about-contact-text" class="text-gray-600 dark:text-gray-400 mb-6 max-w-md mx-auto">Have a story tip, a partnership idea, or want to be featured? We'd love to hear from you.</p>
+            <a href="mailto:hello@glamourwestafrica.com" class="inline-block bg-black dark:bg-white text-white dark:text-black px-8 py-3 text-sm font-bold uppercase tracking-widest rounded-sm hover:bg-gray-800 dark:hover:bg-gray-200 transition">Contact Us</a>
+        </section>
+    </main>
+
+    <!-- NEW PROFESSIONAL FOOTER -->
+    <footer class="bg-gray-900 text-white pt-12 pb-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <h2 class="serif text-4xl font-bold mb-2">GLAMOUR</h2>
+                    <p class="text-gray-400 text-sm mb-6">Authentic, Accessible, Relevant</p>
+                    <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-3">Contact Glamour:</p>
+                    <div class="flex space-x-6">
+                        <a href="https://www.facebook.com/glamourwestafrica" target="_blank" rel="noopener" aria-label="Facebook" class="text-white hover:text-pink-400 transition">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                        </a>
+                        <a href="https://www.linkedin.com/in/glamour-magazine-west-africa-252175116?utm_source=share_via&utm_content=profile&utm_medium=member_android" target="_blank" rel="noopener" aria-label="LinkedIn" class="text-white hover:text-pink-400 transition">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+                        </a>
+                        <a href="https://www.instagram.com/glamourwestafrica" target="_blank" rel="noopener" aria-label="Instagram" class="text-white hover:text-pink-400 transition">
+                            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                        </a>
+                        <a href="https://wa.me/qr/IQMNSIVF6Q5GD1" target="_blank" rel="noopener" aria-label="WhatsApp" class="inline-block hover:opacity-80 transition">
+                            <svg class="w-6 h-6" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><rect x="0" y="0" width="24" height="24" rx="6" fill="#FFFFFF"/><g transform="translate(3,3) scale(0.75)"><path fill="#1F2937" d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347zM12.004 2C6.486 2 2 6.486 2 12.004c0 1.85.505 3.585 1.375 5.086L2 22l5.058-1.354a9.945 9.945 0 004.946 1.343h.001c5.518 0 10.004-4.486 10.004-10.004S17.522 2 12.004 2z"/></g></svg>
+                        </a>
+                        <a href="mailto:glamourmagwestafrica@gmail.com" aria-label="Email" class="text-white hover:text-pink-400 transition">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                        </a>
+                    </div>
+                </div>
+                <div class="md:col-span-2">
+                    <h3 class="text-sm font-bold uppercase tracking-wider mb-4">More From Glamour</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        <a href="about.html" class="text-gray-400 hover:text-white transition text-sm">About Glamour</a>
+                        <a href="index.html#newsletter" class="text-gray-400 hover:text-white transition text-sm">Newsletter Signup</a>
+                        <a href="about.html#partners-section" class="text-gray-400 hover:text-white transition text-sm">Partners</a>
+                        <a href="advertise.html" class="text-gray-400 hover:text-white transition text-sm">Advertise</a>
+                    </div>
+                </div>
+            </div>
+            <hr class="border-gray-700 my-8">
+            <div class="flex flex-wrap gap-4 text-xs text-gray-400 mb-4">
+                <a href="#" class="hover:text-white transition">User Agreement</a>
+                <span class="text-gray-600">|</span>
+                <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                <span class="text-gray-600">|</span>
+                <a href="sitemap.html" class="hover:text-white transition">Site Map</a>
+                <span class="text-gray-600">|</span>
+                <a href="accessibility.html" class="hover:text-white transition">Accessibility Help</a>
+                <span class="text-gray-600">|</span>
+                <a href="advertise.html" class="hover:text-white transition">Advertise With Us</a>
+            </div>
+            <div class="text-xs text-gray-500">
+                <p>© 2026 Glamour+ West Africa. All rights reserved. <em>Glamour+</em> may earn a portion of sales from products that are purchased through our site as part of our Affiliate Partnerships with retailers.</p>
+                <p class="mt-2"><a href="#" class="underline hover:text-gray-400">Ad Choices</a></p>
+            </div>
+        </div>
+    </footer>
+    <button id="back-to-top" class="fixed bottom-8 right-8 bg-black dark:bg-white text-white dark:text-black p-3 rounded-full shadow-lg opacity-0 invisible transition-all duration-300 hover:scale-110 z-50 focus:outline-none"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"></path></svg></button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/stories.js"></script>
+    <script>
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn'); const closeMobileMenuBtn = document.getElementById('close-mobile-menu'); const mobileMenu = document.getElementById('mobile-menu'); const mobileMenuPanel = document.getElementById('mobile-menu-panel');
+        function openMobileMenu() { mobileMenu.classList.remove('hidden'); setTimeout(() => { mobileMenu.classList.remove('opacity-0'); mobileMenuPanel.classList.remove('translate-x-full'); }, 10); }
+        function closeMobileMenu() { mobileMenu.classList.add('opacity-0'); mobileMenuPanel.classList.add('translate-x-full'); setTimeout(() => { mobileMenu.classList.add('hidden'); }, 300); }
+        mobileMenuBtn.addEventListener('click', openMobileMenu); closeMobileMenuBtn.addEventListener('click', closeMobileMenu); mobileMenu.addEventListener('click', (e) => { if (e.target === mobileMenu) closeMobileMenu(); });
+        const searchBtn = document.getElementById('search-btn'); const closeSearchBtn = document.getElementById('close-search'); const searchOverlay = document.getElementById('search-overlay');
+        function openSearch() { searchOverlay.classList.remove('hidden'); setTimeout(() => { searchOverlay.classList.remove('opacity-0'); }, 10); }
+        function closeSearch() { searchOverlay.classList.add('opacity-0'); setTimeout(() => { searchOverlay.classList.add('hidden'); }, 300); }
+        searchBtn.addEventListener('click', openSearch); closeSearchBtn.addEventListener('click', closeSearch);
+        const darkModeBtn = document.getElementById('dark-mode-btn'); const sunIcon = document.getElementById('sun-icon'); const moonIcon = document.getElementById('moon-icon'); const htmlElement = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { htmlElement.classList.add('dark'); sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden'); } else { htmlElement.classList.remove('dark'); sunIcon.classList.add('hidden'); moonIcon.classList.remove('hidden'); }
+        darkModeBtn.addEventListener('click', () => { htmlElement.classList.toggle('dark'); if (htmlElement.classList.contains('dark')) { localStorage.setItem('theme', 'dark'); sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden'); } else { localStorage.setItem('theme', 'light'); sunIcon.classList.add('hidden'); moonIcon.classList.remove('hidden'); } });
+        const progressBar = document.getElementById('progress-bar'); if (progressBar) { window.addEventListener('scroll', () => { const scrollTop = window.scrollY; const docHeight = document.body.offsetHeight; const winHeight = window.innerHeight; const scrollPercent = scrollTop / (docHeight - winHeight); progressBar.style.width = (scrollPercent * 100) + '%'; }); }
+        const backToTopBtn = document.getElementById('back-to-top'); if (backToTopBtn) { window.addEventListener('scroll', () => { if (window.scrollY > 300) { backToTopBtn.classList.remove('opacity-0', 'invisible'); backToTopBtn.classList.add('opacity-100', 'visible'); } else { backToTopBtn.classList.add('opacity-0', 'invisible'); backToTopBtn.classList.remove('opacity-100', 'visible'); } }); backToTopBtn.addEventListener('click', () => { window.scrollTo({ top: 0, behavior: 'smooth' }); }); }
+
+        /* ---------- partners section ---------- */
+        function partnersEscapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str == null ? '' : String(str);
+            return div.innerHTML;
+        }
+        async function renderPartners() {
+            const grid = document.getElementById('partners-grid');
+            if (!grid || typeof supabaseClient === 'undefined' || !supabaseClient) return;
+            const { data, error } = await supabaseClient.from('partners').select('*').order('sort_order', { ascending: true });
+            if (error || !data || data.length === 0) {
+                grid.closest('section').classList.add('hidden');
+                return;
+            }
+            grid.innerHTML = data.map(p => {
+                const logo = p.logo ? `<img src="${partnersEscapeHtml(p.logo)}" alt="${partnersEscapeHtml(p.name)} logo" class="h-14 w-auto object-contain mb-4">` : '';
+                return `<div class="flex gap-5 items-start p-6 border border-gray-200 dark:border-gray-800 rounded-sm">
+                    <div class="flex-shrink-0">${logo}</div>
+                    <div>
+                        <h3 class="font-bold text-lg mb-1 dark:text-white">${partnersEscapeHtml(p.name)}</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">${partnersEscapeHtml(p.story)}</p>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+        renderPartners();
+    </script>
+</body>
+</html>

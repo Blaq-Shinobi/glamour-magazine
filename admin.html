@@ -1,0 +1,1780 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin | GLAMOUR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script> tailwind.config = { darkMode: 'class', theme: { extend: { fontFamily: { sans: ['Inter', 'sans-serif'], serif: ['Playfair Display', 'serif'] } } } } </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,600;0,700;0,900;1,400&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        .serif { font-family: 'Playfair Display', serif; }
+        .field-label { display: block; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; margin-bottom: 0.375rem; }
+        .field-input { width: 100%; padding: 0.6rem 0.75rem; border: 1px solid #d1d5db; border-radius: 2px; font-size: 0.9rem; background: white; }
+        .dark .field-input { background: #1e1e1e; border-color: #374151; color: #f3f4f6; }
+        .field-input:focus { outline: none; border-color: #db2777; }
+    </style>
+</head>
+<body class="bg-white text-gray-900 dark:bg-[#121212] dark:text-gray-100 transition-colors duration-300 min-h-screen">
+
+    <header class="border-b border-gray-200 dark:border-gray-800 sticky top-0 bg-white/95 backdrop-blur-sm z-50 dark:bg-[#121212]/95">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-baseline gap-3">
+                <a href="index.html" class="flex items-baseline gap-1"><span class="serif text-2xl font-bold tracking-tighter text-black dark:text-white">GLAMOUR<span class="font-black">+</span></span><span class="text-[9px] font-bold uppercase tracking-widest text-pink-600 dark:text-pink-400 whitespace-nowrap">West Africa</span></a>
+                <span class="text-xs font-bold uppercase tracking-widest text-pink-600 dark:text-pink-400">Admin</span>
+            </div>
+            <div class="flex items-center gap-4">
+                <span id="user-email" class="hidden sm:inline text-sm text-gray-500 dark:text-gray-400"></span>
+                <a href="index.html" class="text-sm font-semibold hover:text-pink-600 dark:hover:text-pink-400 transition">View Site</a>
+                <button id="dark-mode-btn" class="text-gray-900 dark:text-white hover:text-pink-600 dark:hover:text-pink-400 focus:outline-none"><svg id="sun-icon" class="w-5 h-5 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg><svg id="moon-icon" class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg></button>
+                <button id="logout-btn" class="hidden text-sm font-bold uppercase tracking-wider text-gray-500 dark:text-gray-400 hover:text-pink-600 dark:hover:text-pink-400 transition">Log Out</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+
+        <!-- Config-missing notice -->
+        <div id="config-missing" class="hidden max-w-xl mx-auto text-center py-16">
+            <h1 class="serif text-3xl font-bold mb-4">Supabase isn't configured yet</h1>
+            <p class="text-gray-600 dark:text-gray-400">Fill in <code class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded-sm">js/supabase-config.js</code> with your project URL and anon key, run <code class="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded-sm">supabase-schema.sql</code> in the SQL Editor, then reload this page.</p>
+        </div>
+
+        <!-- Login -->
+        <div id="login-view" class="hidden max-w-sm mx-auto py-16">
+            <h1 class="serif text-3xl font-bold text-center mb-8">Admin Log In</h1>
+            <form id="login-form" class="space-y-4">
+                <div>
+                    <label class="field-label">Email</label>
+                    <input id="login-email" type="email" required class="field-input">
+                </div>
+                <div>
+                    <label class="field-label">Password</label>
+                    <input id="login-password" type="password" required class="field-input">
+                </div>
+                <p id="login-error" class="hidden text-sm text-red-600 dark:text-red-400"></p>
+                <button type="submit" class="w-full bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 dark:hover:bg-gray-200 transition rounded-sm">Log In</button>
+            </form>
+            <p class="text-xs text-gray-400 mt-6 text-center">Admin accounts are created in your Supabase project under Authentication → Users.</p>
+        </div>
+
+        <!-- Admin panel -->
+        <div id="admin-view" class="hidden">
+            <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+                <div class="flex gap-2 flex-wrap">
+                    <button id="tab-stories-btn" class="px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm bg-black dark:bg-white text-white dark:text-black transition">Stories</button>
+                    <button id="tab-authors-btn" class="px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Authors</button>
+                    <button id="tab-covers-btn" class="px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Covers</button>
+                    <button id="tab-about-btn" class="px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">About Page</button>
+                    <button id="tab-team-btn" class="px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Team</button>
+                    <button id="tab-partners-btn" class="px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Partners</button>
+                    <button id="tab-ads-btn" class="px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Ads</button>
+                    <button id="tab-books-btn" class="px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Books</button>
+                </div>
+                <div>
+                    <button id="add-story-btn" class="bg-pink-600 text-white px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-pink-700 transition rounded-sm">+ Add New Story</button>
+                    <button id="add-author-btn" class="hidden bg-pink-600 text-white px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-pink-700 transition rounded-sm">+ Add Author</button>
+                    <button id="add-cover-btn" class="hidden bg-pink-600 text-white px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-pink-700 transition rounded-sm">+ Add Cover</button>
+                    <button id="add-team-btn" class="hidden bg-pink-600 text-white px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-pink-700 transition rounded-sm">+ Add Team Member</button>
+                    <button id="add-partner-btn" class="hidden bg-pink-600 text-white px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-pink-700 transition rounded-sm">+ Add Partner</button>
+                    <button id="add-ad-btn" class="hidden bg-pink-600 text-white px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-pink-700 transition rounded-sm">+ Add Ad Banner</button>
+                    <button id="add-book-btn" class="hidden bg-pink-600 text-white px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-pink-700 transition rounded-sm">+ Add Book</button>
+                </div>
+            </div>
+
+            <p id="admin-message" class="hidden mb-6 p-4 rounded-sm text-sm"></p>
+
+            <div id="stories-tab">
+                <div id="story-list" class="space-y-10"></div>
+            </div>
+
+            <div id="authors-tab" class="hidden">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Editing a bio or photo here updates it everywhere that author appears &mdash; their profile page and every article's "About the Author" box.</p>
+                <div id="author-list" class="divide-y divide-gray-100 dark:divide-gray-800"></div>
+            </div>
+
+            <div id="covers-tab" class="hidden">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">These show in the Magazine Covers gallery on the homepage, most recent first.</p>
+                <div id="cover-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+            </div>
+
+            <div id="about-tab" class="hidden">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Edits here update the About page live &mdash; the title, intro text, and the "Get In Touch" box.</p>
+                <form id="about-form" class="max-w-2xl space-y-5">
+                    <div>
+                        <label class="field-label">Page Title</label>
+                        <input id="about-field-title" class="field-input">
+                    </div>
+                    <div>
+                        <label class="field-label">Subtitle</label>
+                        <input id="about-field-subtitle" class="field-input">
+                    </div>
+                    <div>
+                        <label class="field-label">Intro &mdash; separate paragraphs with a blank line</label>
+                        <textarea id="about-field-intro" class="field-input" rows="8"></textarea>
+                    </div>
+                    <div>
+                        <label class="field-label">"Get In Touch" Heading</label>
+                        <input id="about-field-contact-heading" class="field-input">
+                    </div>
+                    <div>
+                        <label class="field-label">"Get In Touch" Text</label>
+                        <textarea id="about-field-contact-text" class="field-input" rows="2"></textarea>
+                    </div>
+                    <p id="about-form-error" class="hidden text-sm text-red-600 dark:text-red-400"></p>
+                    <p id="about-form-success" class="hidden text-sm text-green-600 dark:text-green-400"></p>
+                    <button type="submit" class="bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 dark:hover:bg-gray-200 transition rounded-sm">Save About Page</button>
+                </form>
+            </div>
+
+            <div id="team-tab" class="hidden">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Shows as the "Meet the Team" section on the About page.</p>
+                <div id="team-list" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6"></div>
+            </div>
+
+            <div id="partners-tab" class="hidden">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Shows as the "Our Partners" section on the About page.</p>
+                <div id="partner-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+            </div>
+
+            <div id="ads-tab" class="hidden">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Paid ad banners shown on the homepage. Only banners marked "Active" appear on the live site — if more than 3 are active, a random 3 rotate in on each visit so every advertiser gets fair exposure.</p>
+                <div id="ad-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+            </div>
+
+            <div id="books-tab" class="hidden">
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Shows on the public Books page. Only books marked "Active" are visible there.</p>
+                <div id="book-list" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6"></div>
+            </div>
+        </div>
+
+        <!-- Add/Edit cover form panel (overlay) -->
+        <div id="cover-form-overlay" class="fixed inset-0 bg-black/60 z-[70] hidden items-start justify-center overflow-y-auto p-4 py-10">
+            <div class="bg-white dark:bg-[#1a1a1a] w-full max-w-lg rounded-sm shadow-2xl">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+                    <h2 id="cover-form-title" class="serif text-2xl font-bold">Add Cover</h2>
+                    <button id="cover-form-close-btn" class="text-gray-500 hover:text-black dark:hover:text-white text-2xl leading-none">&times;</button>
+                </div>
+                <form id="cover-form" class="px-6 py-6 space-y-5">
+                    <input type="hidden" id="cover-field-id">
+                    <div>
+                        <label class="field-label">Title / Issue Name</label>
+                        <input id="cover-field-title" class="field-input" placeholder="e.g. Beyonc\u00e9 &mdash; Love Issue">
+                    </div>
+                    <div>
+                        <label class="field-label">Cover Image</label>
+                        <input id="cover-field-image" class="field-input mb-2" placeholder="https://... (or pick a file below)" required>
+                        <input id="cover-field-image-file" type="file" accept="image/*" class="field-input text-xs">
+                        <p id="cover-field-image-status" class="text-xs mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="field-label">Issue Date</label>
+                        <input id="cover-field-date" type="date" class="field-input">
+                    </div>
+                    <p id="cover-form-error" class="hidden text-sm text-red-600 dark:text-red-400"></p>
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" id="cover-form-cancel-btn" class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Cancel</button>
+                        <button type="submit" class="bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 dark:hover:bg-gray-200 transition rounded-sm">Save Cover</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add/Edit team member form panel (overlay) -->
+        <div id="team-form-overlay" class="fixed inset-0 bg-black/60 z-[70] hidden items-start justify-center overflow-y-auto p-4 py-10">
+            <div class="bg-white dark:bg-[#1a1a1a] w-full max-w-lg rounded-sm shadow-2xl">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+                    <h2 id="team-form-title" class="serif text-2xl font-bold">Add Team Member</h2>
+                    <button id="team-form-close-btn" class="text-gray-500 hover:text-black dark:hover:text-white text-2xl leading-none">&times;</button>
+                </div>
+                <form id="team-form" class="px-6 py-6 space-y-5">
+                    <input type="hidden" id="team-field-id">
+                    <div>
+                        <label class="field-label">Name</label>
+                        <input id="team-field-name" class="field-input" required>
+                    </div>
+                    <div>
+                        <label class="field-label">Role / Title</label>
+                        <input id="team-field-role" class="field-input" placeholder="e.g. Editor-in-Chief">
+                    </div>
+                    <div>
+                        <label class="field-label">Photo</label>
+                        <input id="team-field-image" class="field-input mb-2" placeholder="https://... (or pick a file below)">
+                        <input id="team-field-image-file" type="file" accept="image/*" class="field-input text-xs">
+                        <p id="team-field-image-status" class="text-xs mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="field-label">Short Bio</label>
+                        <textarea id="team-field-bio" class="field-input" rows="3"></textarea>
+                    </div>
+                    <div>
+                        <label class="field-label">Display Order &mdash; lower numbers show first</label>
+                        <input id="team-field-sort" type="number" class="field-input" value="0">
+                    </div>
+                    <p id="team-form-error" class="hidden text-sm text-red-600 dark:text-red-400"></p>
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" id="team-form-cancel-btn" class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Cancel</button>
+                        <button type="submit" class="bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 dark:hover:bg-gray-200 transition rounded-sm">Save Team Member</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add/Edit partner form panel (overlay) -->
+        <div id="partner-form-overlay" class="fixed inset-0 bg-black/60 z-[70] hidden items-start justify-center overflow-y-auto p-4 py-10">
+            <div class="bg-white dark:bg-[#1a1a1a] w-full max-w-lg rounded-sm shadow-2xl">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+                    <h2 id="partner-form-title" class="serif text-2xl font-bold">Add Partner</h2>
+                    <button id="partner-form-close-btn" class="text-gray-500 hover:text-black dark:hover:text-white text-2xl leading-none">&times;</button>
+                </div>
+                <form id="partner-form" class="px-6 py-6 space-y-5">
+                    <input type="hidden" id="partner-field-id">
+                    <div>
+                        <label class="field-label">Partner Name</label>
+                        <input id="partner-field-name" class="field-input" required>
+                    </div>
+                    <div>
+                        <label class="field-label">Logo</label>
+                        <input id="partner-field-image" class="field-input mb-2" placeholder="https://... (or pick a file below)">
+                        <input id="partner-field-image-file" type="file" accept="image/*" class="field-input text-xs">
+                        <p id="partner-field-image-status" class="text-xs mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="field-label">Short Story</label>
+                        <textarea id="partner-field-story" class="field-input" rows="4"></textarea>
+                    </div>
+                    <div>
+                        <label class="field-label">Display Order &mdash; lower numbers show first</label>
+                        <input id="partner-field-sort" type="number" class="field-input" value="0">
+                    </div>
+                    <p id="partner-form-error" class="hidden text-sm text-red-600 dark:text-red-400"></p>
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" id="partner-form-cancel-btn" class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Cancel</button>
+                        <button type="submit" class="bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 dark:hover:bg-gray-200 transition rounded-sm">Save Partner</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add/Edit ad banner form panel (overlay) -->
+        <div id="ad-form-overlay" class="fixed inset-0 bg-black/60 z-[70] hidden items-start justify-center overflow-y-auto p-4 py-10">
+            <div class="bg-white dark:bg-[#1a1a1a] w-full max-w-lg rounded-sm shadow-2xl">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+                    <h2 id="ad-form-title" class="serif text-2xl font-bold">Add Ad Banner</h2>
+                    <button id="ad-form-close-btn" class="text-gray-500 hover:text-black dark:hover:text-white text-2xl leading-none">&times;</button>
+                </div>
+                <form id="ad-form" class="px-6 py-6 space-y-5">
+                    <input type="hidden" id="ad-field-id">
+                    <div>
+                        <label class="field-label">Advertiser Name</label>
+                        <input id="ad-field-name" class="field-input" required>
+                    </div>
+                    <div>
+                        <label class="field-label">Banner Image</label>
+                        <input id="ad-field-image" class="field-input mb-2" placeholder="https://... (or pick a file below)">
+                        <input id="ad-field-image-file" type="file" accept="image/*" class="field-input text-xs">
+                        <p id="ad-field-image-status" class="text-xs mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="field-label">Link URL &mdash; where the ad sends visitors</label>
+                        <input id="ad-field-link" class="field-input" placeholder="https://...">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input id="ad-field-active" type="checkbox" class="w-4 h-4" checked>
+                        <label for="ad-field-active" class="field-label mb-0">Active &mdash; show this ad on the site</label>
+                    </div>
+                    <div>
+                        <label class="field-label">Display Order &mdash; lower numbers show first</label>
+                        <input id="ad-field-sort" type="number" class="field-input" value="0">
+                    </div>
+                    <p id="ad-form-error" class="hidden text-sm text-red-600 dark:text-red-400"></p>
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" id="ad-form-cancel-btn" class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Cancel</button>
+                        <button type="submit" class="bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 dark:hover:bg-gray-200 transition rounded-sm">Save Ad Banner</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add/Edit book form panel (overlay) -->
+        <div id="book-form-overlay" class="fixed inset-0 bg-black/60 z-[70] hidden items-start justify-center overflow-y-auto p-4 py-10">
+            <div class="bg-white dark:bg-[#1a1a1a] w-full max-w-lg rounded-sm shadow-2xl">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+                    <h2 id="book-form-title" class="serif text-2xl font-bold">Add Book</h2>
+                    <button id="book-form-close-btn" class="text-gray-500 hover:text-black dark:hover:text-white text-2xl leading-none">&times;</button>
+                </div>
+                <form id="book-form" class="px-6 py-6 space-y-5">
+                    <input type="hidden" id="book-field-id">
+                    <div>
+                        <label class="field-label">Title</label>
+                        <input id="book-field-title" class="field-input" required>
+                    </div>
+                    <div>
+                        <label class="field-label">Cover Image</label>
+                        <input id="book-field-image" class="field-input mb-2" placeholder="https://... (or pick a file below)">
+                        <input id="book-field-image-file" type="file" accept="image/*" class="field-input text-xs">
+                        <p id="book-field-image-status" class="text-xs mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="field-label">Price &mdash; shown as text, e.g. ₦5,000</label>
+                        <input id="book-field-price" class="field-input" placeholder="₦5,000">
+                    </div>
+                    <div>
+                        <label class="field-label">Description</label>
+                        <textarea id="book-field-description" class="field-input" rows="4"></textarea>
+                    </div>
+                    <div>
+                        <label class="field-label">Buy Link &mdash; a Paystack/Flutterwave payment link, or a mailto: link to take orders by email</label>
+                        <input id="book-field-buylink" class="field-input" placeholder="https://paystack.com/pay/... or mailto:you@example.com">
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <input id="book-field-active" type="checkbox" class="w-4 h-4" checked>
+                        <label for="book-field-active" class="field-label mb-0">Active &mdash; show this book on the site</label>
+                    </div>
+                    <div>
+                        <label class="field-label">Display Order &mdash; lower numbers show first</label>
+                        <input id="book-field-sort" type="number" class="field-input" value="0">
+                    </div>
+                    <p id="book-form-error" class="hidden text-sm text-red-600 dark:text-red-400"></p>
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" id="book-form-cancel-btn" class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Cancel</button>
+                        <button type="submit" class="bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 dark:hover:bg-gray-200 transition rounded-sm">Save Book</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add/Edit author form panel (overlay) -->
+        <div id="author-form-overlay" class="fixed inset-0 bg-black/60 z-[70] hidden items-start justify-center overflow-y-auto p-4 py-10">
+            <div class="bg-white dark:bg-[#1a1a1a] w-full max-w-lg rounded-sm shadow-2xl">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+                    <h2 id="author-form-title" class="serif text-2xl font-bold">Add Author</h2>
+                    <button id="author-form-close-btn" class="text-gray-500 hover:text-black dark:hover:text-white text-2xl leading-none">&times;</button>
+                </div>
+                <form id="author-form" class="px-6 py-6 space-y-5">
+                    <input type="hidden" id="author-field-original-name">
+                    <div>
+                        <label class="field-label">Name</label>
+                        <input id="author-field-name" class="field-input" required>
+                        <p class="text-xs text-gray-400 mt-1">Must exactly match the "Author" name used on their stories.</p>
+                    </div>
+                    <div>
+                        <label class="field-label">Photo</label>
+                        <input id="author-field-image" class="field-input mb-2" placeholder="https://... (or pick a file below)">
+                        <input id="author-field-image-file" type="file" accept="image/*" class="field-input text-xs">
+                        <p id="author-field-image-status" class="text-xs mt-1"></p>
+                    </div>
+                    <div>
+                        <label class="field-label">Bio</label>
+                        <textarea id="author-field-bio" rows="4" class="field-input"></textarea>
+                    </div>
+                    <p id="author-form-error" class="hidden text-sm text-red-600 dark:text-red-400"></p>
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" id="author-form-cancel-btn" class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Cancel</button>
+                        <button type="submit" class="bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 dark:hover:bg-gray-200 transition rounded-sm">Save Author</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Add/Edit story form panel (overlay) -->
+        <div id="form-overlay" class="fixed inset-0 bg-black/60 z-[70] hidden items-start justify-center overflow-y-auto p-4 py-10">
+            <div class="bg-white dark:bg-[#1a1a1a] w-full max-w-2xl rounded-sm shadow-2xl">
+                <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200 dark:border-gray-800">
+                    <h2 id="form-title" class="serif text-2xl font-bold">Add Story</h2>
+                    <button id="form-close-btn" class="text-gray-500 hover:text-black dark:hover:text-white text-2xl leading-none">&times;</button>
+                </div>
+                <form id="story-form" class="px-6 py-6 space-y-5">
+                    <input type="hidden" id="field-id">
+                    <div>
+                        <label class="field-label">Category</label>
+                        <select id="field-category" class="field-input" required></select>
+                    </div>
+                    <div>
+                        <label class="field-label">Title</label>
+                        <input id="field-title" class="field-input" required>
+                    </div>
+                    <div>
+                        <label class="field-label">Excerpt / Subtitle</label>
+                        <textarea id="field-excerpt" rows="2" class="field-input"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="field-label">Author</label>
+                            <input id="field-author" class="field-input">
+                        </div>
+                        <div>
+                            <label class="field-label">Date</label>
+                            <input id="field-date" type="date" class="field-input">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="field-label">Author Bio</label>
+                        <textarea id="field-author-bio" rows="2" class="field-input"></textarea>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="field-label">Author Photo</label>
+                            <input id="field-author-image" class="field-input mb-2" placeholder="https://... (or pick a file below)">
+                            <input id="field-author-image-file" type="file" accept="image/*" class="field-input text-xs">
+                            <p id="field-author-image-status" class="text-xs mt-1"></p>
+                        </div>
+                        <div>
+                            <label class="field-label">Hero Image</label>
+                            <input id="field-image" class="field-input mb-2" placeholder="https://... (or pick a file below)">
+                            <input id="field-image-file" type="file" accept="image/*" class="field-input text-xs">
+                            <p id="field-image-status" class="text-xs mt-1"></p>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="field-label">Image Caption (optional)</label>
+                        <input id="field-image-caption" class="field-input" placeholder="Photography by...">
+                    </div>
+                    <div>
+                        <label class="field-label">Tags (comma separated)</label>
+                        <input id="field-tags" class="field-input" placeholder="Leadership, Wellness, Business">
+                    </div>
+                    <div>
+                        <label class="field-label">Pull Quote (optional)</label>
+                        <textarea id="field-pull-quote" rows="2" class="field-input"></textarea>
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between mb-1">
+                            <label class="field-label mb-0">Body — separate paragraphs with a blank line</label>
+                            <button type="button" id="insert-image-btn" class="text-xs font-bold text-pink-600 dark:text-pink-400 hover:underline">+ Insert Image</button>
+                            <input type="file" id="insert-image-file-picker" accept="image/*" class="hidden">
+                        </div>
+                        <p class="text-xs text-gray-400 mb-2">To drop a photo partway through the story, put it on its own line: <code class="px-1 py-0.5 bg-gray-100 dark:bg-gray-800 rounded-sm">![Caption here](image URL)</code></p>
+                        <textarea id="field-body" rows="8" class="field-input"></textarea>
+                    </div>
+                    <div class="flex gap-6">
+                        <label class="flex items-center gap-2 text-sm"><input id="field-featured" type="checkbox" class="w-4 h-4"> Featured on homepage (hero/side)</label>
+                        <label class="flex items-center gap-2 text-sm"><input id="field-homepage-latest" type="checkbox" class="w-4 h-4"> Show in homepage "Latest Stories"</label>
+                    </div>
+                    <p id="form-error" class="hidden text-sm text-red-600 dark:text-red-400"></p>
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" id="form-cancel-btn" class="px-6 py-3 text-sm font-bold uppercase tracking-wider text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition">Cancel</button>
+                        <button type="submit" class="bg-black dark:bg-white text-white dark:text-black px-6 py-3 text-sm font-bold uppercase tracking-wider hover:bg-gray-800 dark:hover:bg-gray-200 transition rounded-sm">Save Story</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-config.js"></script>
+    <script src="js/stories.js"></script>
+    <script>
+        const CATEGORIES = [
+            ['fashion', 'Fashion'],
+            ['politics', 'Politics'],
+            ['business', 'Business'],
+            ['tourism', 'Tourism'],
+            ['celebrities', 'Celebrities'],
+            ['entertainment', 'Entertainment'],
+            ['red-carpet', 'Red Carpet'],
+            ['local-stories', 'Local Stories'],
+        ];
+
+        /* ---------- image upload (Supabase Storage) ---------- */
+        // Requires a public "media" bucket in Supabase Storage. See setup notes.
+        async function uploadPickedImage(file, urlInputEl, statusEl) {
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                statusEl.textContent = 'Please choose an image file.';
+                statusEl.className = 'text-xs mt-1 text-red-600 dark:text-red-400';
+                return;
+            }
+            statusEl.textContent = 'Uploading…';
+            statusEl.className = 'text-xs mt-1 text-gray-400';
+            const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+            const path = `uploads/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+            const { error } = await supabaseClient.storage.from('media').upload(path, file, { cacheControl: '3600', upsert: false });
+            if (error) {
+                statusEl.textContent = 'Upload failed: ' + error.message;
+                statusEl.className = 'text-xs mt-1 text-red-600 dark:text-red-400';
+                return;
+            }
+            const { data } = supabaseClient.storage.from('media').getPublicUrl(path);
+            urlInputEl.value = data.publicUrl;
+            statusEl.textContent = 'Uploaded ✓';
+            statusEl.className = 'text-xs mt-1 text-green-600 dark:text-green-400';
+        }
+
+        function wireImagePicker(fileInputId, urlInputId, statusId) {
+            const fileEl = document.getElementById(fileInputId);
+            if (!fileEl) return;
+            fileEl.addEventListener('change', (e) => {
+                uploadPickedImage(e.target.files[0], document.getElementById(urlInputId), document.getElementById(statusId));
+            });
+        }
+        wireImagePicker('field-image-file', 'field-image', 'field-image-status');
+        wireImagePicker('field-author-image-file', 'field-author-image', 'field-author-image-status');
+        wireImagePicker('author-field-image-file', 'author-field-image', 'author-field-image-status');
+        wireImagePicker('cover-field-image-file', 'cover-field-image', 'cover-field-image-status');
+        wireImagePicker('team-field-image-file', 'team-field-image', 'team-field-image-status');
+        wireImagePicker('partner-field-image-file', 'partner-field-image', 'partner-field-image-status');
+        wireImagePicker('ad-field-image-file', 'ad-field-image', 'ad-field-image-status');
+        wireImagePicker('book-field-image-file', 'book-field-image', 'book-field-image-status');
+
+        const darkModeBtn = document.getElementById('dark-mode-btn'); const sunIcon = document.getElementById('sun-icon'); const moonIcon = document.getElementById('moon-icon'); const htmlElement = document.documentElement;
+        if (localStorage.getItem('theme') === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) { htmlElement.classList.add('dark'); sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden'); } else { htmlElement.classList.remove('dark'); sunIcon.classList.add('hidden'); moonIcon.classList.remove('hidden'); }
+        darkModeBtn.addEventListener('click', () => { htmlElement.classList.toggle('dark'); if (htmlElement.classList.contains('dark')) { localStorage.setItem('theme', 'dark'); sunIcon.classList.remove('hidden'); moonIcon.classList.add('hidden'); } else { localStorage.setItem('theme', 'light'); sunIcon.classList.add('hidden'); moonIcon.classList.remove('hidden'); } });
+
+        const configMissingEl = document.getElementById('config-missing');
+        const loginView = document.getElementById('login-view');
+        const adminView = document.getElementById('admin-view');
+        const userEmailEl = document.getElementById('user-email');
+        const logoutBtn = document.getElementById('logout-btn');
+
+        let allStories = [];
+
+        function populateCategorySelect() {
+            const sel = document.getElementById('field-category');
+            sel.innerHTML = CATEGORIES.map(([slug, label]) => `<option value="${slug}">${label}</option>`).join('');
+        }
+
+        function showMessage(text, isError) {
+            const el = document.getElementById('admin-message');
+            el.textContent = text;
+            el.className = 'mb-6 p-4 rounded-sm text-sm ' + (isError
+                ? 'bg-red-50 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300'
+                : 'bg-green-50 dark:bg-green-950 border border-green-200 dark:border-green-800 text-green-700 dark:text-green-300');
+            el.classList.remove('hidden');
+            setTimeout(() => el.classList.add('hidden'), 4000);
+        }
+
+        async function refreshStoryList() {
+            try {
+                allStories = await loadStories();
+            } catch (err) {
+                showMessage('Could not load stories: ' + err.message, true);
+                return;
+            }
+            const container = document.getElementById('story-list');
+            container.innerHTML = CATEGORIES.map(([slug, label]) => {
+                const items = allStories.filter(s => s.categorySlug === slug)
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+                const rows = items.length
+                    ? items.map(storyRowHTML).join('')
+                    : `<p class="text-sm text-gray-400 py-3">No stories yet.</p>`;
+                return `<section>
+                    <h3 class="serif text-xl font-bold mb-3 border-b border-gray-200 dark:border-gray-800 pb-2">${label} <span class="text-sm font-normal text-gray-400">(${items.length})</span></h3>
+                    <div class="divide-y divide-gray-100 dark:divide-gray-800">${rows}</div>
+                </section>`;
+            }).join('');
+
+            container.querySelectorAll('[data-edit]').forEach(btn => {
+                btn.addEventListener('click', () => openForm(allStories.find(s => s.id === btn.dataset.edit)));
+            });
+            container.querySelectorAll('[data-delete]').forEach(btn => {
+                btn.addEventListener('click', () => deleteStory(btn.dataset.delete, btn.dataset.title));
+            });
+        }
+
+        function storyRowHTML(s) {
+            const badges = [s.featured ? 'Featured' : null, s.homepageLatest ? 'Latest' : null].filter(Boolean);
+            const badgeHTML = badges.map(b => `<span class="px-2 py-0.5 bg-pink-100 dark:bg-pink-900 text-pink-700 dark:text-pink-300 text-xs font-semibold rounded-full mr-2">${b}</span>`).join('');
+            return `<div class="flex items-center gap-4 py-3">
+                <img src="${escapeHtml(s.image)}" class="w-16 h-16 object-cover rounded-sm flex-shrink-0 bg-gray-100 dark:bg-gray-800">
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold truncate">${escapeHtml(s.title)}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">By ${escapeHtml(s.author)} · ${formatDate(s.date)} ${badgeHTML}</p>
+                </div>
+                <button data-edit="${escapeHtml(s.id)}" class="text-sm font-semibold text-pink-600 dark:text-pink-400 hover:underline flex-shrink-0">Edit</button>
+                <button data-delete="${escapeHtml(s.id)}" data-title="${escapeHtml(s.title)}" class="text-sm font-semibold text-gray-400 hover:text-red-600 dark:hover:text-red-400 flex-shrink-0">Delete</button>
+            </div>`;
+        }
+
+        function openForm(story) {
+            document.getElementById('form-error').classList.add('hidden');
+            document.getElementById('form-title').textContent = story ? 'Edit Story' : 'Add Story';
+            document.getElementById('field-id').value = story ? story.id : '';
+            document.getElementById('field-category').value = story ? story.categorySlug : CATEGORIES[0][0];
+            document.getElementById('field-title').value = story ? story.title : '';
+            document.getElementById('field-excerpt').value = story ? story.excerpt : '';
+            document.getElementById('field-author').value = story ? story.author : '';
+            document.getElementById('field-date').value = story ? story.date : new Date().toISOString().slice(0, 10);
+            document.getElementById('field-author-bio').value = story ? story.authorBio : '';
+            document.getElementById('field-author-image').value = story ? story.authorImage : '';
+            document.getElementById('field-image').value = story ? story.image : '';
+            document.getElementById('field-image-caption').value = story ? story.imageCaption : '';
+            document.getElementById('field-tags').value = story ? (story.tags || []).join(', ') : '';
+            document.getElementById('field-pull-quote').value = story ? story.pullQuote : '';
+            document.getElementById('field-body').value = story ? (story.body || []).join('\n\n') : '';
+            document.getElementById('field-featured').checked = story ? !!story.featured : false;
+            document.getElementById('field-homepage-latest').checked = story ? !!story.homepageLatest : false;
+            document.getElementById('field-image-file').value = '';
+            document.getElementById('field-image-status').textContent = '';
+            document.getElementById('field-author-image-file').value = '';
+            document.getElementById('field-author-image-status').textContent = '';
+            document.getElementById('form-overlay').classList.remove('hidden');
+            document.getElementById('form-overlay').classList.add('flex');
+        }
+
+        function closeForm() {
+            document.getElementById('form-overlay').classList.add('hidden');
+            document.getElementById('form-overlay').classList.remove('flex');
+        }
+
+        document.getElementById('add-story-btn').addEventListener('click', () => openForm(null));
+        document.getElementById('form-close-btn').addEventListener('click', closeForm);
+        document.getElementById('form-cancel-btn').addEventListener('click', closeForm);
+        document.getElementById('form-overlay').addEventListener('click', (e) => { if (e.target.id === 'form-overlay') closeForm(); });
+
+        document.getElementById('insert-image-btn').addEventListener('click', () => {
+            document.getElementById('insert-image-file-picker').click();
+        });
+
+        document.getElementById('insert-image-file-picker').addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            e.target.value = ''; // reset so picking the same file twice still fires 'change'
+            if (!file) return;
+            if (!file.type.startsWith('image/')) {
+                alert('Please choose an image file.');
+                return;
+            }
+
+            const textarea = document.getElementById('field-body');
+            const start = textarea.selectionStart;
+            const end = textarea.selectionEnd;
+
+            // Drop in a temporary placeholder while the upload runs
+            const placeholder = '![Uploading…]()';
+            const before = textarea.value.slice(0, start);
+            const after = textarea.value.slice(end);
+            const needsLeadingBreak = before.length && !before.endsWith('\n\n');
+            const needsTrailingBreak = after.length && !after.startsWith('\n\n');
+            const insertText = (needsLeadingBreak ? '\n\n' : '') + placeholder + (needsTrailingBreak ? '\n\n' : '');
+            textarea.value = before + insertText + after;
+
+            const ext = (file.name.split('.').pop() || 'jpg').toLowerCase();
+            const path = `uploads/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+            const { error } = await supabaseClient.storage.from('media').upload(path, file, { cacheControl: '3600', upsert: false });
+
+            if (error) {
+                textarea.value = textarea.value.replace(placeholder, `![Upload failed: ${error.message}]()`);
+                return;
+            }
+
+            const { data } = supabaseClient.storage.from('media').getPublicUrl(path);
+            const caption = prompt('Caption (optional):') || '';
+            const finalLine = `![${caption}](${data.publicUrl})`;
+            textarea.value = textarea.value.replace(placeholder, finalLine);
+
+            const cursorPos = before.length + (needsLeadingBreak ? 2 : 0) + finalLine.length;
+            textarea.focus();
+            textarea.setSelectionRange(cursorPos, cursorPos);
+        });
+
+        document.getElementById('story-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorEl = document.getElementById('form-error');
+            errorEl.classList.add('hidden');
+
+            const existingId = document.getElementById('field-id').value;
+            const categorySlug = document.getElementById('field-category').value;
+            const categoryLabel = CATEGORIES.find(c => c[0] === categorySlug)[1];
+            const title = document.getElementById('field-title').value.trim();
+            const body = document.getElementById('field-body').value
+                .split(/\n\s*\n/).map(p => p.trim()).filter(Boolean);
+            const tags = document.getElementById('field-tags').value
+                .split(',').map(t => t.trim()).filter(Boolean);
+
+            let id = existingId;
+            if (!id) {
+                let base = slugify(title);
+                id = base;
+                let i = 2;
+                while (allStories.some(s => s.id === id)) { id = `${base}-${i}`; i++; }
+            }
+
+            const story = {
+                id,
+                category: categoryLabel,
+                categorySlug,
+                title,
+                excerpt: document.getElementById('field-excerpt').value.trim(),
+                author: document.getElementById('field-author').value.trim(),
+                authorBio: document.getElementById('field-author-bio').value.trim(),
+                authorImage: document.getElementById('field-author-image').value.trim(),
+                image: document.getElementById('field-image').value.trim(),
+                imageCaption: document.getElementById('field-image-caption').value.trim(),
+                date: document.getElementById('field-date').value,
+                tags,
+                featured: document.getElementById('field-featured').checked,
+                homepageLatest: document.getElementById('field-homepage-latest').checked,
+                pullQuote: document.getElementById('field-pull-quote').value.trim(),
+                body,
+            };
+
+            const row = storyToRow(story);
+            let error;
+            if (existingId) {
+                ({ error } = await supabaseClient.from('stories').update(row).eq('id', existingId));
+            } else {
+                ({ error } = await supabaseClient.from('stories').insert(row));
+            }
+
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            closeForm();
+            showMessage(existingId ? 'Story updated.' : 'Story added.', false);
+            refreshStoryList();
+        });
+
+        async function deleteStory(id, title) {
+            if (!confirm(`Delete "${title}"? This can't be undone.`)) return;
+            const { error } = await supabaseClient.from('stories').delete().eq('id', id);
+            if (error) { showMessage('Could not delete: ' + error.message, true); return; }
+            showMessage('Story deleted.', false);
+            refreshStoryList();
+        }
+
+        /* ---------- authors tab ---------- */
+
+        let allAuthors = [];
+
+        const tabStoriesBtn = document.getElementById('tab-stories-btn');
+        const tabAuthorsBtn = document.getElementById('tab-authors-btn');
+        const storiesTab = document.getElementById('stories-tab');
+        const authorsTab = document.getElementById('authors-tab');
+        const addStoryBtn = document.getElementById('add-story-btn');
+        const addAuthorBtn = document.getElementById('add-author-btn');
+
+        function showStoriesTab() {
+            storiesTab.classList.remove('hidden');
+            authorsTab.classList.add('hidden');
+            coversTab.classList.add('hidden');
+            aboutTab.classList.add('hidden');
+            teamTab.classList.add('hidden');
+            partnersTab.classList.add('hidden');
+            adsTab.classList.add('hidden');
+            booksTab.classList.add('hidden');
+            addStoryBtn.classList.remove('hidden');
+            addAuthorBtn.classList.add('hidden');
+            addCoverBtn.classList.add('hidden');
+            addTeamBtn.classList.add('hidden');
+            addPartnerBtn.classList.add('hidden');
+            addAdBtn.classList.add('hidden');
+            addBookBtn.classList.add('hidden');
+            const active = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm bg-black dark:bg-white text-white dark:text-black transition';
+            const inactive = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition';
+            tabStoriesBtn.className = active;
+            tabAuthorsBtn.className = inactive;
+            tabCoversBtn.className = inactive;
+            tabAboutBtn.className = inactive;
+            tabTeamBtn.className = inactive;
+            tabPartnersBtn.className = inactive;
+            tabAdsBtn.className = inactive;
+            tabBooksBtn.className = inactive;
+        }
+
+        function showAuthorsTab() {
+            storiesTab.classList.add('hidden');
+            authorsTab.classList.remove('hidden');
+            coversTab.classList.add('hidden');
+            aboutTab.classList.add('hidden');
+            teamTab.classList.add('hidden');
+            partnersTab.classList.add('hidden');
+            adsTab.classList.add('hidden');
+            booksTab.classList.add('hidden');
+            addStoryBtn.classList.add('hidden');
+            addAuthorBtn.classList.remove('hidden');
+            addCoverBtn.classList.add('hidden');
+            addTeamBtn.classList.add('hidden');
+            addPartnerBtn.classList.add('hidden');
+            addAdBtn.classList.add('hidden');
+            addBookBtn.classList.add('hidden');
+            const active = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm bg-black dark:bg-white text-white dark:text-black transition';
+            const inactive = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition';
+            tabAuthorsBtn.className = active;
+            tabStoriesBtn.className = inactive;
+            tabCoversBtn.className = inactive;
+            tabAboutBtn.className = inactive;
+            tabTeamBtn.className = inactive;
+            tabPartnersBtn.className = inactive;
+            tabAdsBtn.className = inactive;
+            tabBooksBtn.className = inactive;
+            refreshAuthorList();
+        }
+
+        tabStoriesBtn.addEventListener('click', showStoriesTab);
+        tabAuthorsBtn.addEventListener('click', showAuthorsTab);
+
+        async function refreshAuthorList() {
+            try {
+                allAuthors = await loadAuthors();
+            } catch (err) {
+                showMessage('Could not load authors: ' + err.message, true);
+                return;
+            }
+            const container = document.getElementById('author-list');
+            if (allAuthors.length === 0) {
+                container.innerHTML = `<p class="text-sm text-gray-400 py-3">No authors yet. Run the migration in supabase-schema.sql, or add one manually.</p>`;
+                return;
+            }
+            const sorted = [...allAuthors].sort((a, b) => a.name.localeCompare(b.name));
+            container.innerHTML = sorted.map(authorRowHTML).join('');
+
+            container.querySelectorAll('[data-edit-author]').forEach(btn => {
+                btn.addEventListener('click', () => openAuthorForm(allAuthors.find(a => a.name === btn.dataset.editAuthor)));
+            });
+            container.querySelectorAll('[data-delete-author]').forEach(btn => {
+                btn.addEventListener('click', () => deleteAuthor(btn.dataset.deleteAuthor));
+            });
+        }
+
+        function authorRowHTML(a) {
+            const storyCount = allStories.filter(s => s.author === a.name).length;
+            return `<div class="flex items-center gap-4 py-3">
+                <img src="${escapeHtml(a.image)}" class="w-14 h-14 rounded-full object-cover flex-shrink-0 bg-gray-100 dark:bg-gray-800">
+                <div class="flex-1 min-w-0">
+                    <p class="font-semibold truncate">${escapeHtml(a.name)}</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400 truncate">${storyCount} ${storyCount === 1 ? 'story' : 'stories'} &middot; ${escapeHtml(a.bio || 'No bio yet')}</p>
+                </div>
+                <button data-edit-author="${escapeHtml(a.name)}" class="text-sm font-semibold text-pink-600 dark:text-pink-400 hover:underline flex-shrink-0">Edit</button>
+                <button data-delete-author="${escapeHtml(a.name)}" class="text-sm font-semibold text-gray-400 hover:text-red-600 dark:hover:text-red-400 flex-shrink-0">Delete</button>
+            </div>`;
+        }
+
+        function openAuthorForm(author) {
+            document.getElementById('author-form-error').classList.add('hidden');
+            document.getElementById('author-form-title').textContent = author ? 'Edit Author' : 'Add Author';
+            document.getElementById('author-field-original-name').value = author ? author.name : '';
+            const nameInput = document.getElementById('author-field-name');
+            nameInput.value = author ? author.name : '';
+            nameInput.readOnly = !!author;
+            nameInput.className = 'field-input' + (author ? ' opacity-60 cursor-not-allowed' : '');
+            document.getElementById('author-field-image').value = author ? author.image : '';
+            document.getElementById('author-field-bio').value = author ? author.bio : '';
+            document.getElementById('author-field-image-file').value = '';
+            document.getElementById('author-field-image-status').textContent = '';
+            document.getElementById('author-form-overlay').classList.remove('hidden');
+            document.getElementById('author-form-overlay').classList.add('flex');
+        }
+
+        function closeAuthorForm() {
+            document.getElementById('author-form-overlay').classList.add('hidden');
+            document.getElementById('author-form-overlay').classList.remove('flex');
+        }
+
+        addAuthorBtn.addEventListener('click', () => openAuthorForm(null));
+        document.getElementById('author-form-close-btn').addEventListener('click', closeAuthorForm);
+        document.getElementById('author-form-cancel-btn').addEventListener('click', closeAuthorForm);
+        document.getElementById('author-form-overlay').addEventListener('click', (e) => { if (e.target.id === 'author-form-overlay') closeAuthorForm(); });
+
+        document.getElementById('author-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorEl = document.getElementById('author-form-error');
+            errorEl.classList.add('hidden');
+
+            const originalName = document.getElementById('author-field-original-name').value;
+            const name = document.getElementById('author-field-name').value.trim();
+            const row = {
+                name,
+                image: document.getElementById('author-field-image').value.trim(),
+                bio: document.getElementById('author-field-bio').value.trim(),
+            };
+
+            let error;
+            if (originalName) {
+                ({ error } = await supabaseClient.from('authors').update(row).eq('name', originalName));
+            } else {
+                ({ error } = await supabaseClient.from('authors').insert(row));
+            }
+
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            closeAuthorForm();
+            showMessage(originalName ? 'Author updated.' : 'Author added.', false);
+            refreshAuthorList();
+        });
+
+        async function deleteAuthor(name) {
+            if (!confirm(`Delete the profile for "${name}"? Their stories will keep showing, just without this dedicated bio/photo.`)) return;
+            const { error } = await supabaseClient.from('authors').delete().eq('name', name);
+            if (error) { showMessage('Could not delete: ' + error.message, true); return; }
+            showMessage('Author deleted.', false);
+            refreshAuthorList();
+        }
+
+        /* ---------- covers tab ---------- */
+
+        let allCovers = [];
+        const tabCoversBtn = document.getElementById('tab-covers-btn');
+        const coversTab = document.getElementById('covers-tab');
+        const addCoverBtn = document.getElementById('add-cover-btn');
+
+        function showCoversTab() {
+            storiesTab.classList.add('hidden');
+            authorsTab.classList.add('hidden');
+            coversTab.classList.remove('hidden');
+            aboutTab.classList.add('hidden');
+            teamTab.classList.add('hidden');
+            partnersTab.classList.add('hidden');
+            adsTab.classList.add('hidden');
+            booksTab.classList.add('hidden');
+            addStoryBtn.classList.add('hidden');
+            addAuthorBtn.classList.add('hidden');
+            addCoverBtn.classList.remove('hidden');
+            addTeamBtn.classList.add('hidden');
+            addPartnerBtn.classList.add('hidden');
+            addAdBtn.classList.add('hidden');
+            addBookBtn.classList.add('hidden');
+            const active = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm bg-black dark:bg-white text-white dark:text-black transition';
+            const inactive = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition';
+            tabCoversBtn.className = active;
+            tabStoriesBtn.className = inactive;
+            tabAuthorsBtn.className = inactive;
+            tabAboutBtn.className = inactive;
+            tabTeamBtn.className = inactive;
+            tabPartnersBtn.className = inactive;
+            tabAdsBtn.className = inactive;
+            tabBooksBtn.className = inactive;
+            refreshCoverList();
+        }
+        tabCoversBtn.addEventListener('click', showCoversTab);
+
+        /* ---------- about page tab ---------- */
+
+        const tabAboutBtn = document.getElementById('tab-about-btn');
+        const aboutTab = document.getElementById('about-tab');
+
+        function showAboutTab() {
+            storiesTab.classList.add('hidden');
+            authorsTab.classList.add('hidden');
+            coversTab.classList.add('hidden');
+            aboutTab.classList.remove('hidden');
+            teamTab.classList.add('hidden');
+            partnersTab.classList.add('hidden');
+            adsTab.classList.add('hidden');
+            booksTab.classList.add('hidden');
+            addStoryBtn.classList.add('hidden');
+            addAuthorBtn.classList.add('hidden');
+            addCoverBtn.classList.add('hidden');
+            addTeamBtn.classList.add('hidden');
+            addPartnerBtn.classList.add('hidden');
+            addAdBtn.classList.add('hidden');
+            addBookBtn.classList.add('hidden');
+            const active = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm bg-black dark:bg-white text-white dark:text-black transition';
+            const inactive = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition';
+            tabAboutBtn.className = active;
+            tabStoriesBtn.className = inactive;
+            tabAuthorsBtn.className = inactive;
+            tabCoversBtn.className = inactive;
+            tabTeamBtn.className = inactive;
+            tabPartnersBtn.className = inactive;
+            tabAdsBtn.className = inactive;
+            tabBooksBtn.className = inactive;
+            refreshAboutForm();
+        }
+        tabAboutBtn.addEventListener('click', showAboutTab);
+
+        async function refreshAboutForm() {
+            const content = await loadAboutContent();
+            if (!content) return;
+            document.getElementById('about-field-title').value = content.title || '';
+            document.getElementById('about-field-subtitle').value = content.subtitle || '';
+            document.getElementById('about-field-intro').value = (content.intro || []).join('\n\n');
+            document.getElementById('about-field-contact-heading').value = content.contact_heading || '';
+            document.getElementById('about-field-contact-text').value = content.contact_text || '';
+        }
+
+        document.getElementById('about-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorEl = document.getElementById('about-form-error');
+            const successEl = document.getElementById('about-form-success');
+            errorEl.classList.add('hidden');
+            successEl.classList.add('hidden');
+
+            const intro = document.getElementById('about-field-intro').value
+                .split(/\n\s*\n/)
+                .map(p => p.trim())
+                .filter(Boolean);
+
+            const row = {
+                title: document.getElementById('about-field-title').value.trim(),
+                subtitle: document.getElementById('about-field-subtitle').value.trim(),
+                intro,
+                contact_heading: document.getElementById('about-field-contact-heading').value.trim(),
+                contact_text: document.getElementById('about-field-contact-text').value.trim(),
+                updated_at: new Date().toISOString(),
+            };
+
+            const { error } = await supabaseClient.from('about_content').update(row).eq('id', 'about');
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            successEl.textContent = 'About page updated.';
+            successEl.classList.remove('hidden');
+        });
+
+        /* ---------- team tab ---------- */
+
+        let allTeam = [];
+        const tabTeamBtn = document.getElementById('tab-team-btn');
+        const teamTab = document.getElementById('team-tab');
+        const addTeamBtn = document.getElementById('add-team-btn');
+
+        function showTeamTab() {
+            storiesTab.classList.add('hidden');
+            partnersTab.classList.add('hidden');
+            addPartnerBtn.classList.add('hidden');
+            adsTab.classList.add('hidden');
+            booksTab.classList.add('hidden');
+            addAdBtn.classList.add('hidden');
+            addBookBtn.classList.add('hidden');
+            authorsTab.classList.add('hidden');
+            coversTab.classList.add('hidden');
+            aboutTab.classList.add('hidden');
+            teamTab.classList.remove('hidden');
+            addStoryBtn.classList.add('hidden');
+            addAuthorBtn.classList.add('hidden');
+            addCoverBtn.classList.add('hidden');
+            addTeamBtn.classList.remove('hidden');
+            const active = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm bg-black dark:bg-white text-white dark:text-black transition';
+            const inactive = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition';
+            tabTeamBtn.className = active;
+            tabStoriesBtn.className = inactive;
+            tabAuthorsBtn.className = inactive;
+            tabCoversBtn.className = inactive;
+            tabAboutBtn.className = inactive;
+            tabPartnersBtn.className = inactive;
+            tabAdsBtn.className = inactive;
+            tabBooksBtn.className = inactive;
+            refreshTeamList();
+        }
+        tabTeamBtn.addEventListener('click', showTeamTab);
+
+        async function refreshTeamList() {
+            try {
+                allTeam = await loadTeam();
+            } catch (err) {
+                showMessage('Could not load team: ' + err.message, true);
+                return;
+            }
+            const container = document.getElementById('team-list');
+            if (allTeam.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-sm text-gray-400 py-3">No team members yet. Click "+ Add Team Member" to add your first one.</p>`;
+                return;
+            }
+            container.innerHTML = allTeam.map(teamRowHTML).join('');
+            container.querySelectorAll('[data-edit-team]').forEach(btn => {
+                btn.addEventListener('click', () => openTeamForm(allTeam.find(t => t.id === btn.dataset.editTeam)));
+            });
+            container.querySelectorAll('[data-delete-team]').forEach(btn => {
+                btn.addEventListener('click', () => deleteTeamMember(btn.dataset.deleteTeam, btn.dataset.name));
+            });
+        }
+
+        function teamRowHTML(t) {
+            const img = t.image || 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80';
+            return `<div class="group relative text-center bg-gray-50 dark:bg-gray-900 p-4 rounded-sm">
+                <img src="${escapeHtml(img)}" class="w-20 h-20 rounded-full object-cover mx-auto mb-3 bg-gray-100 dark:bg-gray-800">
+                <p class="font-semibold text-sm truncate">${escapeHtml(t.name)}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 truncate mb-3">${escapeHtml(t.role || '')}</p>
+                <div class="flex justify-center gap-3">
+                    <button data-edit-team="${escapeHtml(t.id)}" class="text-xs font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 hover:underline">Edit</button>
+                    <button data-delete-team="${escapeHtml(t.id)}" data-name="${escapeHtml(t.name)}" class="text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-red-600 dark:hover:text-red-400">Delete</button>
+                </div>
+            </div>`;
+        }
+
+        function openTeamForm(member) {
+            document.getElementById('team-form-error').classList.add('hidden');
+            document.getElementById('team-form-title').textContent = member ? 'Edit Team Member' : 'Add Team Member';
+            document.getElementById('team-field-id').value = member ? member.id : '';
+            document.getElementById('team-field-name').value = member ? member.name : '';
+            document.getElementById('team-field-role').value = member ? (member.role || '') : '';
+            document.getElementById('team-field-image').value = member ? (member.image || '') : '';
+            document.getElementById('team-field-bio').value = member ? (member.bio || '') : '';
+            document.getElementById('team-field-sort').value = member ? (member.sort_order || 0) : 0;
+            document.getElementById('team-field-image-file').value = '';
+            document.getElementById('team-field-image-status').textContent = '';
+            document.getElementById('team-form-overlay').classList.remove('hidden');
+            document.getElementById('team-form-overlay').classList.add('flex');
+        }
+
+        function closeTeamForm() {
+            document.getElementById('team-form-overlay').classList.add('hidden');
+            document.getElementById('team-form-overlay').classList.remove('flex');
+        }
+
+        addTeamBtn.addEventListener('click', () => openTeamForm(null));
+        document.getElementById('team-form-close-btn').addEventListener('click', closeTeamForm);
+        document.getElementById('team-form-cancel-btn').addEventListener('click', closeTeamForm);
+        document.getElementById('team-form-overlay').addEventListener('click', (e) => { if (e.target.id === 'team-form-overlay') closeTeamForm(); });
+
+        document.getElementById('team-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorEl = document.getElementById('team-form-error');
+            errorEl.classList.add('hidden');
+
+            const existingId = document.getElementById('team-field-id').value;
+            const name = document.getElementById('team-field-name').value.trim();
+            const row = {
+                name,
+                role: document.getElementById('team-field-role').value.trim(),
+                image: document.getElementById('team-field-image').value.trim(),
+                bio: document.getElementById('team-field-bio').value.trim(),
+                sort_order: parseInt(document.getElementById('team-field-sort').value, 10) || 0,
+            };
+
+            let error;
+            if (existingId) {
+                ({ error } = await supabaseClient.from('team_members').update(row).eq('id', existingId));
+            } else {
+                row.id = slugify(name);
+                ({ error } = await supabaseClient.from('team_members').insert(row));
+            }
+
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            closeTeamForm();
+            showMessage(existingId ? 'Team member updated.' : 'Team member added.', false);
+            refreshTeamList();
+        });
+
+        async function deleteTeamMember(id, name) {
+            if (!confirm(`Delete "${name}"? This can't be undone.`)) return;
+            const { error } = await supabaseClient.from('team_members').delete().eq('id', id);
+            if (error) { showMessage('Could not delete: ' + error.message, true); return; }
+            showMessage('Team member deleted.', false);
+            refreshTeamList();
+        }
+
+        /* ---------- partners tab ---------- */
+
+        let allPartners = [];
+        const tabPartnersBtn = document.getElementById('tab-partners-btn');
+        const partnersTab = document.getElementById('partners-tab');
+        const addPartnerBtn = document.getElementById('add-partner-btn');
+
+        function showPartnersTab() {
+            storiesTab.classList.add('hidden');
+            authorsTab.classList.add('hidden');
+            coversTab.classList.add('hidden');
+            aboutTab.classList.add('hidden');
+            teamTab.classList.add('hidden');
+            partnersTab.classList.remove('hidden');
+            adsTab.classList.add('hidden');
+            booksTab.classList.add('hidden');
+            addStoryBtn.classList.add('hidden');
+            addAuthorBtn.classList.add('hidden');
+            addCoverBtn.classList.add('hidden');
+            addTeamBtn.classList.add('hidden');
+            addPartnerBtn.classList.remove('hidden');
+            addAdBtn.classList.add('hidden');
+            addBookBtn.classList.add('hidden');
+            const active = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm bg-black dark:bg-white text-white dark:text-black transition';
+            const inactive = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition';
+            tabPartnersBtn.className = active;
+            tabStoriesBtn.className = inactive;
+            tabAuthorsBtn.className = inactive;
+            tabCoversBtn.className = inactive;
+            tabAboutBtn.className = inactive;
+            tabTeamBtn.className = inactive;
+            tabAdsBtn.className = inactive;
+            tabBooksBtn.className = inactive;
+            refreshPartnerList();
+        }
+        tabPartnersBtn.addEventListener('click', showPartnersTab);
+
+        async function loadPartners() {
+            const { data, error } = await supabaseClient.from('partners').select('*').order('sort_order', { ascending: true });
+            if (error) throw error;
+            return data || [];
+        }
+
+        async function refreshPartnerList() {
+            try {
+                allPartners = await loadPartners();
+            } catch (err) {
+                showMessage('Could not load partners: ' + err.message, true);
+                return;
+            }
+            const container = document.getElementById('partner-list');
+            if (allPartners.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-sm text-gray-400 py-3">No partners yet. Click "+ Add Partner" to add your first one.</p>`;
+                return;
+            }
+            container.innerHTML = allPartners.map(partnerRowHTML).join('');
+            container.querySelectorAll('[data-edit-partner]').forEach(btn => {
+                btn.addEventListener('click', () => openPartnerForm(allPartners.find(p => p.id === btn.dataset.editPartner)));
+            });
+            container.querySelectorAll('[data-delete-partner]').forEach(btn => {
+                btn.addEventListener('click', () => deletePartner(btn.dataset.deletePartner, btn.dataset.name));
+            });
+        }
+
+        function partnerRowHTML(p) {
+            const img = p.logo || 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80';
+            return `<div class="group relative bg-gray-50 dark:bg-gray-900 p-4 rounded-sm">
+                <img src="${escapeHtml(img)}" class="h-12 w-auto object-contain mb-3 bg-white dark:bg-gray-800 p-1 rounded-sm">
+                <p class="font-semibold text-sm truncate">${escapeHtml(p.name)}</p>
+                <p class="text-xs text-gray-500 dark:text-gray-400 line-clamp-2 mb-3">${escapeHtml(p.story || '')}</p>
+                <div class="flex gap-3">
+                    <button data-edit-partner="${escapeHtml(p.id)}" class="text-xs font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 hover:underline">Edit</button>
+                    <button data-delete-partner="${escapeHtml(p.id)}" data-name="${escapeHtml(p.name)}" class="text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-red-600 dark:hover:text-red-400">Delete</button>
+                </div>
+            </div>`;
+        }
+
+        function openPartnerForm(partner) {
+            document.getElementById('partner-form-error').classList.add('hidden');
+            document.getElementById('partner-form-title').textContent = partner ? 'Edit Partner' : 'Add Partner';
+            document.getElementById('partner-field-id').value = partner ? partner.id : '';
+            document.getElementById('partner-field-name').value = partner ? partner.name : '';
+            document.getElementById('partner-field-image').value = partner ? (partner.logo || '') : '';
+            document.getElementById('partner-field-story').value = partner ? (partner.story || '') : '';
+            document.getElementById('partner-field-sort').value = partner ? (partner.sort_order || 0) : 0;
+            document.getElementById('partner-field-image-file').value = '';
+            document.getElementById('partner-field-image-status').textContent = '';
+            document.getElementById('partner-form-overlay').classList.remove('hidden');
+            document.getElementById('partner-form-overlay').classList.add('flex');
+        }
+
+        function closePartnerForm() {
+            document.getElementById('partner-form-overlay').classList.add('hidden');
+            document.getElementById('partner-form-overlay').classList.remove('flex');
+        }
+
+        addPartnerBtn.addEventListener('click', () => openPartnerForm(null));
+        document.getElementById('partner-form-close-btn').addEventListener('click', closePartnerForm);
+        document.getElementById('partner-form-cancel-btn').addEventListener('click', closePartnerForm);
+        document.getElementById('partner-form-overlay').addEventListener('click', (e) => { if (e.target.id === 'partner-form-overlay') closePartnerForm(); });
+
+        document.getElementById('partner-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorEl = document.getElementById('partner-form-error');
+            errorEl.classList.add('hidden');
+
+            const existingId = document.getElementById('partner-field-id').value;
+            const name = document.getElementById('partner-field-name').value.trim();
+            const row = {
+                name,
+                logo: document.getElementById('partner-field-image').value.trim(),
+                story: document.getElementById('partner-field-story').value.trim(),
+                sort_order: parseInt(document.getElementById('partner-field-sort').value, 10) || 0,
+            };
+
+            let error;
+            if (existingId) {
+                ({ error } = await supabaseClient.from('partners').update(row).eq('id', existingId));
+            } else {
+                row.id = slugify(name);
+                ({ error } = await supabaseClient.from('partners').insert(row));
+            }
+
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            closePartnerForm();
+            showMessage(existingId ? 'Partner updated.' : 'Partner added.', false);
+            refreshPartnerList();
+        });
+
+        async function deletePartner(id, name) {
+            if (!confirm(`Delete "${name}"? This can't be undone.`)) return;
+            const { error } = await supabaseClient.from('partners').delete().eq('id', id);
+            if (error) { showMessage('Could not delete: ' + error.message, true); return; }
+            showMessage('Partner deleted.', false);
+            refreshPartnerList();
+        }
+
+        /* ---------- ads tab ---------- */
+
+        let allAds = [];
+        const tabAdsBtn = document.getElementById('tab-ads-btn');
+        const adsTab = document.getElementById('ads-tab');
+        const addAdBtn = document.getElementById('add-ad-btn');
+
+        function showAdsTab() {
+            storiesTab.classList.add('hidden');
+            authorsTab.classList.add('hidden');
+            coversTab.classList.add('hidden');
+            aboutTab.classList.add('hidden');
+            teamTab.classList.add('hidden');
+            partnersTab.classList.add('hidden');
+            adsTab.classList.remove('hidden');
+            booksTab.classList.add('hidden');
+            addStoryBtn.classList.add('hidden');
+            addAuthorBtn.classList.add('hidden');
+            addCoverBtn.classList.add('hidden');
+            addTeamBtn.classList.add('hidden');
+            addPartnerBtn.classList.add('hidden');
+            addAdBtn.classList.remove('hidden');
+            addBookBtn.classList.add('hidden');
+            const active = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm bg-black dark:bg-white text-white dark:text-black transition';
+            const inactive = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition';
+            tabAdsBtn.className = active;
+            tabStoriesBtn.className = inactive;
+            tabAuthorsBtn.className = inactive;
+            tabCoversBtn.className = inactive;
+            tabAboutBtn.className = inactive;
+            tabTeamBtn.className = inactive;
+            tabPartnersBtn.className = inactive;
+            tabBooksBtn.className = inactive;
+            refreshAdList();
+        }
+        tabAdsBtn.addEventListener('click', showAdsTab);
+
+        async function loadAdBanners() {
+            const { data, error } = await supabaseClient.from('ad_banners').select('*').order('sort_order', { ascending: true });
+            if (error) throw error;
+            return data || [];
+        }
+
+        async function refreshAdList() {
+            try {
+                allAds = await loadAdBanners();
+            } catch (err) {
+                showMessage('Could not load ad banners: ' + err.message, true);
+                return;
+            }
+            const container = document.getElementById('ad-list');
+            if (allAds.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-sm text-gray-400 py-3">No ad banners yet. Click "+ Add Ad Banner" once you have a paying advertiser.</p>`;
+                return;
+            }
+            container.innerHTML = allAds.map(adRowHTML).join('');
+            container.querySelectorAll('[data-edit-ad]').forEach(btn => {
+                btn.addEventListener('click', () => openAdForm(allAds.find(a => a.id === btn.dataset.editAd)));
+            });
+            container.querySelectorAll('[data-delete-ad]').forEach(btn => {
+                btn.addEventListener('click', () => deleteAd(btn.dataset.deleteAd, btn.dataset.name));
+            });
+        }
+
+        function adRowHTML(a) {
+            const img = a.image || 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80';
+            const statusBadge = a.active
+                ? `<span class="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">Active</span>`
+                : `<span class="text-xs font-bold uppercase tracking-wider text-gray-400">Inactive</span>`;
+            return `<div class="group relative bg-gray-50 dark:bg-gray-900 p-4 rounded-sm">
+                <img src="${escapeHtml(img)}" class="w-full h-20 object-cover mb-3 bg-white dark:bg-gray-800 rounded-sm">
+                <div class="flex items-center justify-between mb-1">
+                    <p class="font-semibold text-sm truncate">${escapeHtml(a.advertiser_name)}</p>
+                    ${statusBadge}
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 truncate mb-3">${escapeHtml(a.link_url || 'No link set')}</p>
+                <div class="flex gap-3">
+                    <button data-edit-ad="${escapeHtml(a.id)}" class="text-xs font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 hover:underline">Edit</button>
+                    <button data-delete-ad="${escapeHtml(a.id)}" data-name="${escapeHtml(a.advertiser_name)}" class="text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-red-600 dark:hover:text-red-400">Delete</button>
+                </div>
+            </div>`;
+        }
+
+        function openAdForm(ad) {
+            document.getElementById('ad-form-error').classList.add('hidden');
+            document.getElementById('ad-form-title').textContent = ad ? 'Edit Ad Banner' : 'Add Ad Banner';
+            document.getElementById('ad-field-id').value = ad ? ad.id : '';
+            document.getElementById('ad-field-name').value = ad ? ad.advertiser_name : '';
+            document.getElementById('ad-field-image').value = ad ? (ad.image || '') : '';
+            document.getElementById('ad-field-link').value = ad ? (ad.link_url || '') : '';
+            document.getElementById('ad-field-active').checked = ad ? !!ad.active : true;
+            document.getElementById('ad-field-sort').value = ad ? (ad.sort_order || 0) : 0;
+            document.getElementById('ad-field-image-file').value = '';
+            document.getElementById('ad-field-image-status').textContent = '';
+            document.getElementById('ad-form-overlay').classList.remove('hidden');
+            document.getElementById('ad-form-overlay').classList.add('flex');
+        }
+
+        function closeAdForm() {
+            document.getElementById('ad-form-overlay').classList.add('hidden');
+            document.getElementById('ad-form-overlay').classList.remove('flex');
+        }
+
+        addAdBtn.addEventListener('click', () => openAdForm(null));
+        document.getElementById('ad-form-close-btn').addEventListener('click', closeAdForm);
+        document.getElementById('ad-form-cancel-btn').addEventListener('click', closeAdForm);
+        document.getElementById('ad-form-overlay').addEventListener('click', (e) => { if (e.target.id === 'ad-form-overlay') closeAdForm(); });
+
+        document.getElementById('ad-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorEl = document.getElementById('ad-form-error');
+            errorEl.classList.add('hidden');
+
+            const existingId = document.getElementById('ad-field-id').value;
+            const name = document.getElementById('ad-field-name').value.trim();
+            const row = {
+                advertiser_name: name,
+                image: document.getElementById('ad-field-image').value.trim(),
+                link_url: document.getElementById('ad-field-link').value.trim(),
+                active: document.getElementById('ad-field-active').checked,
+                sort_order: parseInt(document.getElementById('ad-field-sort').value, 10) || 0,
+            };
+
+            let error;
+            if (existingId) {
+                ({ error } = await supabaseClient.from('ad_banners').update(row).eq('id', existingId));
+            } else {
+                row.id = slugify(name) + '-' + Date.now().toString(36);
+                ({ error } = await supabaseClient.from('ad_banners').insert(row));
+            }
+
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            closeAdForm();
+            showMessage(existingId ? 'Ad banner updated.' : 'Ad banner added.', false);
+            refreshAdList();
+        });
+
+        async function deleteAd(id, name) {
+            if (!confirm(`Delete the ad for "${name}"? This can't be undone.`)) return;
+            const { error } = await supabaseClient.from('ad_banners').delete().eq('id', id);
+            if (error) { showMessage('Could not delete: ' + error.message, true); return; }
+            showMessage('Ad banner deleted.', false);
+            refreshAdList();
+        }
+
+        /* ---------- books tab ---------- */
+
+        let allBooks = [];
+        const tabBooksBtn = document.getElementById('tab-books-btn');
+        const booksTab = document.getElementById('books-tab');
+        const addBookBtn = document.getElementById('add-book-btn');
+
+        function showBooksTab() {
+            storiesTab.classList.add('hidden');
+            authorsTab.classList.add('hidden');
+            coversTab.classList.add('hidden');
+            aboutTab.classList.add('hidden');
+            teamTab.classList.add('hidden');
+            partnersTab.classList.add('hidden');
+            adsTab.classList.add('hidden');
+            booksTab.classList.remove('hidden');
+            addStoryBtn.classList.add('hidden');
+            addAuthorBtn.classList.add('hidden');
+            addCoverBtn.classList.add('hidden');
+            addTeamBtn.classList.add('hidden');
+            addPartnerBtn.classList.add('hidden');
+            addAdBtn.classList.add('hidden');
+            addBookBtn.classList.remove('hidden');
+            const active = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm bg-black dark:bg-white text-white dark:text-black transition';
+            const inactive = 'px-4 py-2 text-sm font-bold uppercase tracking-wider rounded-sm text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white transition';
+            tabBooksBtn.className = active;
+            tabStoriesBtn.className = inactive;
+            tabAuthorsBtn.className = inactive;
+            tabCoversBtn.className = inactive;
+            tabAboutBtn.className = inactive;
+            tabTeamBtn.className = inactive;
+            tabPartnersBtn.className = inactive;
+            tabAdsBtn.className = inactive;
+            refreshBookList();
+        }
+        tabBooksBtn.addEventListener('click', showBooksTab);
+
+        async function loadBooks() {
+            const { data, error } = await supabaseClient.from('books').select('*').order('sort_order', { ascending: true });
+            if (error) throw error;
+            return data || [];
+        }
+
+        async function refreshBookList() {
+            try {
+                allBooks = await loadBooks();
+            } catch (err) {
+                showMessage('Could not load books: ' + err.message, true);
+                return;
+            }
+            const container = document.getElementById('book-list');
+            if (allBooks.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-sm text-gray-400 py-3">No books yet. Click "+ Add Book" to add your first title.</p>`;
+                return;
+            }
+            container.innerHTML = allBooks.map(bookRowHTML).join('');
+            container.querySelectorAll('[data-edit-book]').forEach(btn => {
+                btn.addEventListener('click', () => openBookForm(allBooks.find(b => b.id === btn.dataset.editBook)));
+            });
+            container.querySelectorAll('[data-delete-book]').forEach(btn => {
+                btn.addEventListener('click', () => deleteBook(btn.dataset.deleteBook, btn.dataset.name));
+            });
+        }
+
+        function bookRowHTML(b) {
+            const img = b.cover_image || 'https://images.unsplash.com/photo-1544947950-fa07a98d237f?ixlib=rb-4.0.3&auto=format&fit=crop&w=300&q=80';
+            const statusBadge = b.active
+                ? `<span class="text-xs font-bold uppercase tracking-wider text-green-600 dark:text-green-400">Active</span>`
+                : `<span class="text-xs font-bold uppercase tracking-wider text-gray-400">Inactive</span>`;
+            return `<div class="group relative bg-gray-50 dark:bg-gray-900 p-4 rounded-sm">
+                <img src="${escapeHtml(img)}" class="w-full h-32 object-cover mb-3 bg-white dark:bg-gray-800 rounded-sm">
+                <div class="flex items-center justify-between mb-1">
+                    <p class="font-semibold text-sm truncate">${escapeHtml(b.title)}</p>
+                    ${statusBadge}
+                </div>
+                <p class="text-xs text-pink-600 dark:text-pink-400 font-semibold mb-3">${escapeHtml(b.price_display || 'No price set')}</p>
+                <div class="flex gap-3">
+                    <button data-edit-book="${escapeHtml(b.id)}" class="text-xs font-bold uppercase tracking-wider text-pink-600 dark:text-pink-400 hover:underline">Edit</button>
+                    <button data-delete-book="${escapeHtml(b.id)}" data-name="${escapeHtml(b.title)}" class="text-xs font-bold uppercase tracking-wider text-gray-400 hover:text-red-600 dark:hover:text-red-400">Delete</button>
+                </div>
+            </div>`;
+        }
+
+        function openBookForm(book) {
+            document.getElementById('book-form-error').classList.add('hidden');
+            document.getElementById('book-form-title').textContent = book ? 'Edit Book' : 'Add Book';
+            document.getElementById('book-field-id').value = book ? book.id : '';
+            document.getElementById('book-field-title').value = book ? book.title : '';
+            document.getElementById('book-field-image').value = book ? (book.cover_image || '') : '';
+            document.getElementById('book-field-price').value = book ? (book.price_display || '') : '';
+            document.getElementById('book-field-description').value = book ? (book.description || '') : '';
+            document.getElementById('book-field-buylink').value = book ? (book.buy_link || '') : '';
+            document.getElementById('book-field-active').checked = book ? !!book.active : true;
+            document.getElementById('book-field-sort').value = book ? (book.sort_order || 0) : 0;
+            document.getElementById('book-field-image-file').value = '';
+            document.getElementById('book-field-image-status').textContent = '';
+            document.getElementById('book-form-overlay').classList.remove('hidden');
+            document.getElementById('book-form-overlay').classList.add('flex');
+        }
+
+        function closeBookForm() {
+            document.getElementById('book-form-overlay').classList.add('hidden');
+            document.getElementById('book-form-overlay').classList.remove('flex');
+        }
+
+        addBookBtn.addEventListener('click', () => openBookForm(null));
+        document.getElementById('book-form-close-btn').addEventListener('click', closeBookForm);
+        document.getElementById('book-form-cancel-btn').addEventListener('click', closeBookForm);
+        document.getElementById('book-form-overlay').addEventListener('click', (e) => { if (e.target.id === 'book-form-overlay') closeBookForm(); });
+
+        document.getElementById('book-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorEl = document.getElementById('book-form-error');
+            errorEl.classList.add('hidden');
+
+            const existingId = document.getElementById('book-field-id').value;
+            const title = document.getElementById('book-field-title').value.trim();
+            const row = {
+                title,
+                cover_image: document.getElementById('book-field-image').value.trim(),
+                price_display: document.getElementById('book-field-price').value.trim(),
+                description: document.getElementById('book-field-description').value.trim(),
+                buy_link: document.getElementById('book-field-buylink').value.trim(),
+                active: document.getElementById('book-field-active').checked,
+                sort_order: parseInt(document.getElementById('book-field-sort').value, 10) || 0,
+            };
+
+            let error;
+            if (existingId) {
+                ({ error } = await supabaseClient.from('books').update(row).eq('id', existingId));
+            } else {
+                row.id = slugify(title) + '-' + Date.now().toString(36);
+                ({ error } = await supabaseClient.from('books').insert(row));
+            }
+
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            closeBookForm();
+            showMessage(existingId ? 'Book updated.' : 'Book added.', false);
+            refreshBookList();
+        });
+
+        async function deleteBook(id, name) {
+            if (!confirm(`Delete "${name}"? This can't be undone.`)) return;
+            const { error } = await supabaseClient.from('books').delete().eq('id', id);
+            if (error) { showMessage('Could not delete: ' + error.message, true); return; }
+            showMessage('Book deleted.', false);
+            refreshBookList();
+        }
+
+        async function refreshCoverList() {
+            try {
+                allCovers = await loadCovers();
+            } catch (err) {
+                showMessage('Could not load covers: ' + err.message, true);
+                return;
+            }
+            const container = document.getElementById('cover-list');
+            if (allCovers.length === 0) {
+                container.innerHTML = `<p class="col-span-full text-sm text-gray-400 py-3">No covers yet. Click "+ Add Cover" to add your first one.</p>`;
+                return;
+            }
+            container.innerHTML = allCovers.map(coverRowHTML).join('');
+            container.querySelectorAll('[data-edit-cover]').forEach(btn => {
+                btn.addEventListener('click', () => openCoverForm(allCovers.find(c => c.id === btn.dataset.editCover)));
+            });
+            container.querySelectorAll('[data-delete-cover]').forEach(btn => {
+                btn.addEventListener('click', () => deleteCover(btn.dataset.deleteCover, btn.dataset.title));
+            });
+        }
+
+        function coverRowHTML(c) {
+            return `<div class="group relative bg-gray-100 dark:bg-gray-900">
+                <img src="${escapeHtml(c.image)}" class="w-full h-auto object-contain">
+                <div class="absolute inset-0 bg-black/0 group-hover:bg-black/60 transition flex items-center justify-center gap-3 opacity-0 group-hover:opacity-100">
+                    <button data-edit-cover="${escapeHtml(c.id)}" class="text-xs font-bold uppercase tracking-wider text-white hover:text-pink-400">Edit</button>
+                    <button data-delete-cover="${escapeHtml(c.id)}" data-title="${escapeHtml(c.title || 'this cover')}" class="text-xs font-bold uppercase tracking-wider text-white hover:text-red-400">Delete</button>
+                </div>
+                <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 truncate">${escapeHtml(c.title || '(untitled)')}</p>
+            </div>`;
+        }
+
+        function openCoverForm(cover) {
+            document.getElementById('cover-form-error').classList.add('hidden');
+            document.getElementById('cover-form-title').textContent = cover ? 'Edit Cover' : 'Add Cover';
+            document.getElementById('cover-field-id').value = cover ? cover.id : '';
+            document.getElementById('cover-field-title').value = cover ? (cover.title || '') : '';
+            document.getElementById('cover-field-image').value = cover ? cover.image : '';
+            document.getElementById('cover-field-date').value = cover ? cover.issue_date : new Date().toISOString().slice(0, 10);
+            document.getElementById('cover-field-image-file').value = '';
+            document.getElementById('cover-field-image-status').textContent = '';
+            document.getElementById('cover-form-overlay').classList.remove('hidden');
+            document.getElementById('cover-form-overlay').classList.add('flex');
+        }
+
+        function closeCoverForm() {
+            document.getElementById('cover-form-overlay').classList.add('hidden');
+            document.getElementById('cover-form-overlay').classList.remove('flex');
+        }
+
+        addCoverBtn.addEventListener('click', () => openCoverForm(null));
+        document.getElementById('cover-form-close-btn').addEventListener('click', closeCoverForm);
+        document.getElementById('cover-form-cancel-btn').addEventListener('click', closeCoverForm);
+        document.getElementById('cover-form-overlay').addEventListener('click', (e) => { if (e.target.id === 'cover-form-overlay') closeCoverForm(); });
+
+        document.getElementById('cover-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const errorEl = document.getElementById('cover-form-error');
+            errorEl.classList.add('hidden');
+
+            const existingId = document.getElementById('cover-field-id').value;
+            const row = {
+                title: document.getElementById('cover-field-title').value.trim(),
+                image: document.getElementById('cover-field-image').value.trim(),
+                issue_date: document.getElementById('cover-field-date').value,
+            };
+
+            let error;
+            if (existingId) {
+                ({ error } = await supabaseClient.from('covers').update(row).eq('id', existingId));
+            } else {
+                row.id = slugify((row.title || 'cover') + '-' + row.issue_date);
+                ({ error } = await supabaseClient.from('covers').insert(row));
+            }
+
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+                return;
+            }
+
+            closeCoverForm();
+            showMessage(existingId ? 'Cover updated.' : 'Cover added.', false);
+            refreshCoverList();
+        });
+
+        async function deleteCover(id, title) {
+            if (!confirm(`Delete "${title}"? This can't be undone.`)) return;
+            const { error } = await supabaseClient.from('covers').delete().eq('id', id);
+            if (error) { showMessage('Could not delete: ' + error.message, true); return; }
+            showMessage('Cover deleted.', false);
+            refreshCoverList();
+        }
+
+        /* ---------- auth (admin allow-list gated) ---------- */
+
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const errorEl = document.getElementById('login-error');
+            errorEl.classList.add('hidden');
+            const { error } = await supabaseClient.auth.signInWithPassword({ email, password });
+            if (error) {
+                errorEl.textContent = error.message;
+                errorEl.classList.remove('hidden');
+            }
+            // On success, onAuthStateChange (below) picks up the new session
+            // and runs the admin check before showing the dashboard.
+        });
+
+        logoutBtn.addEventListener('click', () => supabaseClient.auth.signOut());
+
+        function showLoggedOut() {
+            loginView.classList.remove('hidden');
+            adminView.classList.add('hidden');
+            logoutBtn.classList.add('hidden');
+            userEmailEl.classList.add('hidden');
+        }
+
+        function showLoggedIn(session) {
+            loginView.classList.add('hidden');
+            adminView.classList.remove('hidden');
+            logoutBtn.classList.remove('hidden');
+            userEmailEl.textContent = session.user.email;
+            userEmailEl.classList.remove('hidden');
+            showStoriesTab();
+            refreshStoryList();
+        }
+
+        async function isAdmin(userId) {
+            const { data, error } = await supabaseClient
+                .from('admins')
+                .select('user_id')
+                .eq('user_id', userId)
+                .maybeSingle();
+            return !error && !!data;
+        }
+
+        // Tracks whether we're mid-signout so we don't show a spurious
+        // "access denied" message right after the user clicks Log Out.
+        let signingOut = false;
+
+        async function handleSession(session) {
+            if (!session) { showLoggedOut(); return; }
+            const admin = await isAdmin(session.user.id);
+            if (!admin) {
+                if (!signingOut) {
+                    const errorEl = document.getElementById('login-error');
+                    errorEl.textContent = "This account isn't an admin yet. Ask the site owner to add you in Supabase (Table Editor \u2192 admins).";
+                    errorEl.classList.remove('hidden');
+                }
+                signingOut = true;
+                await supabaseClient.auth.signOut();
+                signingOut = false;
+                showLoggedOut();
+                return;
+            }
+            showLoggedIn(session);
+        }
+
+        (function init() {
+            if (!supabaseClient) {
+                configMissingEl.classList.remove('hidden');
+                return;
+            }
+            populateCategorySelect();
+            supabaseClient.auth.onAuthStateChange((_event, session) => { handleSession(session); });
+            supabaseClient.auth.getSession().then(({ data: { session } }) => handleSession(session));
+        })();
+    </script>
+</body>
+</html>
